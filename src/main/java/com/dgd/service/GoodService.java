@@ -22,5 +22,4 @@ public class GoodService {
         goodRepository.save(form.toEntity());
     }
 
-
 }
