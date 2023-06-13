@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface GoodRepository extends JpaRepository<Good, Long> {
 
-    Optional<Good> findByOfferId(Long offerId);
+
 }

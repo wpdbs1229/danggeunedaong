@@ -1,14 +1,17 @@
 package com.dgd.model.entity;
 
+import com.dgd.model.dto.SharingApplicationDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -21,14 +24,20 @@ public class SharingApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Long productId;
-    @NotNull
-    private String userId;
-    @NotEmpty
-    private String location;
+    @ManyToOne
+    private Good good;
+
+    @ManyToOne
+    private User user;
+
+    private Double distance;
 
     private LocalDateTime requestedAt;
     private String content;
 
+    public SharingApplicationDto.Response toResponseDto(){
+        return SharingApplicationDto.Response.builder()
+
+                .build();
+    }
 }
