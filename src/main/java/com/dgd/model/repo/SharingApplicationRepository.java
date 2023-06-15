@@ -12,5 +12,7 @@ public interface SharingApplicationRepository extends JpaRepository<SharingAppli
     Optional<SharingApplication> findByUserAndGood(User user, Good good);
 
     List<SharingApplication> findAllByGood(Good good);
+
+    Integer countByGood(Good good);
     boolean existsByUserAndGood(User user, Good good);
 }

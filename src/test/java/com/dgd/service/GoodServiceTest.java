@@ -5,6 +5,7 @@ import com.dgd.model.entity.Good;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.GoodRepository;
 
+import com.dgd.model.repo.SharingApplicationRepository;
 import com.dgd.model.repo.UserRepository;
 import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
@@ -37,13 +38,14 @@ class GoodServiceTest {
     @Mock
     private UserRepository userRepository;
 
-
+    @Mock
+    private SharingApplicationRepository sharingApplicationRepository;
     @InjectMocks
     private GoodService goodService;
 
     @BeforeEach
     public void setUpTest(){
-        goodService = new GoodService(goodRepository, userRepository);
+        goodService = new GoodService(goodRepository, userRepository,sharingApplicationRepository);
     }
     @Test
     @DisplayName("상품정보 조회하기")

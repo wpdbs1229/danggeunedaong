@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class GoodDto {
@@ -59,5 +62,16 @@ public class GoodDto {
         private Status status;
         private List<String> goodImageList;
         private Long view_cnt;
+    }
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Responses{
+        private String title;
+        private String featuredImage;
+        private LocalDateTime updatedAt;
+        private String location;
+        private Integer sharingApplicationNum;
     }
 }

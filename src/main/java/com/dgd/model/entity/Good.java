@@ -64,4 +64,14 @@ public class Good extends Base {
                 .build();
     }
 
+    public GoodDto.Responses toResponsesDto(Integer sharingApplicationNum){
+        return GoodDto.Responses.builder()
+                .title(this.title)
+                .featuredImage(this.goodImageList.get(0))
+                .updatedAt(this.getUpdatedAt())
+                .location(this.getUser().getLocation())
+                .sharingApplicationNum(sharingApplicationNum)
+                .build();
+    }
+
 }
