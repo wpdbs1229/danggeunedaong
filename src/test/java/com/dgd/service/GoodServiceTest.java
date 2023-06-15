@@ -75,7 +75,7 @@ class GoodServiceTest {
                 .longitude(123.5342)
                 .status(Status.SHARING)
                 .goodImageList(list)
-                .view_cnt(1L)
+                .viewCnt(1L)
                 .build();
 
 
