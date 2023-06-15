@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class ApplicationErrorResponse {
 
     private HttpStatus status;
-    private String error;
     private String code;
     private int errorCode;
     private String description;
@@ -25,7 +24,6 @@ public class ApplicationErrorResponse {
                 .body(
                   ApplicationErrorResponse.builder()
                           .status(errorCode.getStatus())
-                          .error(errorCode.getStatus().name())
                           .code(errorCode.name())
                           .errorCode(errorCode.getErrorCode())
                           .description(errorCode.getDescription())

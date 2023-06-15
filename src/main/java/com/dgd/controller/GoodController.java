@@ -17,23 +17,15 @@ public class GoodController {
     private final GoodService goodService;
     @GetMapping("/offer/info")
     public ResponseEntity<?> readPerOneGood(@Valid @RequestParam Long goodId) {
-        try {
-           var response = goodService.readPerOneGood(goodId);
-            return ResponseEntity.ok(response);
-        } catch (Exception e){
-          return ResponseEntity.badRequest().body("등록되지 않은 상품입니다.");
-        }
+        var response = goodService.readPerOneGood(goodId);
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * 테스트를 위한 임시코드
-     * @param request
-     * @return
-     */
-//    @PostMapping("/offer")
-//    public ResponseEntity<?> saveGood(@RequestBody GoodDto.Request request){
-//        goodService.saveGood(request);
-//        return  ResponseEntity.ok("저장이 완료되었습니다.");
-//    }
+
+    @PostMapping("/offer/info")
+    public ResponseEntity<?> saveGood(@RequestBody GoodDto.Request request){
+        goodService.saveGood(request);
+        return  ResponseEntity.ok("등록이 완료되었습니다.");
+    }
 
 }

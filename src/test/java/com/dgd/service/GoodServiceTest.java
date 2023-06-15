@@ -34,12 +34,16 @@ class GoodServiceTest {
     @Mock
     private GoodRepository goodRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
+
     @InjectMocks
     private GoodService goodService;
 
     @BeforeEach
     public void setUpTest(){
-        goodService = new GoodService(goodRepository);
+        goodService = new GoodService(goodRepository, userRepository);
     }
     @Test
     @DisplayName("상품정보 조회하기")
@@ -89,7 +93,7 @@ class GoodServiceTest {
         Assertions.assertEquals(response.getDescription(),givenGood.getDescription());
         Assertions.assertEquals(response.getStatus(),givenGood.getStatus());
         Assertions.assertEquals(response.getGoodImageList(),givenGood.getGoodImageList());
-        Assertions.assertEquals(response.getView_cnt(),givenGood.getView_cnt());
+        Assertions.assertEquals(response.getView_cnt(),givenGood.getViewCnt());
 
 
         verify(goodRepository).findById(1L);

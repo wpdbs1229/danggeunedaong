@@ -19,28 +19,28 @@ public class GoodDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Request{
-        private String offerNickName;
+        private String userId;
         private MainCategory mainCategory;
         private SubCategory subCategory;
         private String title;
         private String description;
         private Status status;
         private List<String> goodImageList;
-        private Long view_cnt;
 
 
-        public Good toEntity(User user){
+
+        public Good toEntity(User user, Long viewCnt, Status status){
             return Good.builder()
                     .user(user)
                     .mainCategory(this.mainCategory)
                     .subCategory(this.subCategory)
                     .title(this.title)
-                    .description(this.title)
+                    .description(this.description)
                     .latitude(user.getLatitude())
                     .longitude(user.getLongitude())
-                    .status(this.status)
+                    .status(status)
                     .goodImageList(this.goodImageList)
-                    .view_cnt(0L)
+                    .viewCnt(viewCnt)
                     .build();
         }
     }

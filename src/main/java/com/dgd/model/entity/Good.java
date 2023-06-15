@@ -8,7 +8,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -39,10 +38,8 @@ public class Good extends Base {
     @NotEmpty
     private String description;
 
-    @NotNull
     private Double latitude;
 
-    @NotNull
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
@@ -51,7 +48,7 @@ public class Good extends Base {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> goodImageList;
 
-    private Long view_cnt;
+    private Long viewCnt;
 
     public GoodDto.Response toResponseDto(User user){
         return GoodDto.Response.builder()
@@ -62,7 +59,7 @@ public class Good extends Base {
                 .description(this.description)
                 .location(user.getLocation())
                 .status(this.status)
-                .view_cnt(this.view_cnt)
+                .view_cnt(this.viewCnt)
                 .goodImageList(this.goodImageList)
                 .build();
     }

@@ -12,4 +12,5 @@ public class ApplicationExceptionHandler {
     public ResponseEntity<ApplicationErrorResponse> handleApplicationException(ApplicationException e){
         return ApplicationErrorResponse.toResponseEntity(e.getErrorCode());
     }
+
 }
