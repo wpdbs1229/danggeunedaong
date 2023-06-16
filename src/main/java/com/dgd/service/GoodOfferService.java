@@ -14,11 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class GoodService {
+public class GoodOfferService {
 
     private final GoodRepository goodRepository;
     private final UserRepository userRepository;
@@ -68,5 +67,13 @@ public class GoodService {
         return responses;
     }
 
+    public void updateGoods(GoodDto.UpdateRequest form){
+        Good good = goodRepository.findById(form.getGoodId())
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+
+        good.update(form);
+
+        goodRepository.save(good);
+    }
 
 }

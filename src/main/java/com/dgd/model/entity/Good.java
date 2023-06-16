@@ -50,6 +50,15 @@ public class Good extends Base {
 
     private Long viewCnt;
 
+
+    public void update(GoodDto.UpdateRequest form){
+        this.mainCategory = form.getMainCategory();
+        this.subCategory = form.getSubCategory();
+        this.title = form.getTitle();
+        this.description = form.getDescription();
+        this.status = form.getStatus();
+        this.goodImageList = form.getGoodImageList();
+    }
     public GoodDto.Response toResponseDto(User user){
         return GoodDto.Response.builder()
                 .offerNickName(user.getNickName())
@@ -59,8 +68,9 @@ public class Good extends Base {
                 .description(this.description)
                 .location(user.getLocation())
                 .status(this.status)
-                .view_cnt(this.viewCnt)
+                .viewCnt(this.viewCnt)
                 .goodImageList(this.goodImageList)
+                .updatedAt(this.getUpdatedAt())
                 .build();
     }
 

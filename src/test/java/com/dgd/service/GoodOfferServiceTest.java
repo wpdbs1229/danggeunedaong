@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @Transactional
-class GoodServiceTest {
+class GoodOfferServiceTest {
 
     @Mock
     private GoodRepository goodRepository;
@@ -41,11 +41,11 @@ class GoodServiceTest {
     @Mock
     private SharingApplicationRepository sharingApplicationRepository;
     @InjectMocks
-    private GoodService goodService;
+    private GoodOfferService goodOfferService;
 
     @BeforeEach
     public void setUpTest(){
-        goodService = new GoodService(goodRepository, userRepository,sharingApplicationRepository);
+        goodOfferService = new GoodOfferService(goodRepository, userRepository,sharingApplicationRepository);
     }
     @Test
     @DisplayName("상품정보 조회하기")
@@ -85,7 +85,7 @@ class GoodServiceTest {
                 .thenReturn(Optional.of(givenGood));
 
         //when
-        GoodDto.Response response = goodService.readPerOneGood(1L);
+        GoodDto.Response response = goodOfferService.readPerOneGood(1L);
 
         //then
         Assertions.assertEquals(response.getOfferNickName(), givenGood.getUser().getNickName());

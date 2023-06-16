@@ -52,6 +52,32 @@ public class GoodDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class UpdateRequest{
+        private Long goodId;
+        private MainCategory mainCategory;
+        private SubCategory subCategory;
+        private String title;
+        private String description;
+        private Status status;
+        private List<String> goodImageList;
+
+
+
+        public Good toEntity(){
+            return Good.builder()
+                    .mainCategory(this.mainCategory)
+                    .subCategory(this.subCategory)
+                    .title(this.title)
+                    .description(this.description)
+                    .goodImageList(this.goodImageList)
+                    .build();
+        }
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response{
         private String offerNickName;
         private MainCategory mainCategory;
@@ -61,8 +87,10 @@ public class GoodDto {
         private String location;
         private Status status;
         private List<String> goodImageList;
-        private Long view_cnt;
+        private Long viewCnt;
+        private LocalDateTime updatedAt;
     }
+
     @Getter
     @Builder
     @AllArgsConstructor

@@ -4,7 +4,7 @@ import com.dgd.model.dto.GoodDto;
 import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
 import com.dgd.model.type.SubCategory;
-import com.dgd.service.GoodService;
+import com.dgd.service.GoodOfferService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(GoodController.class)
-class GoodControllerTest {
+@WebMvcTest(GoodOfferController.class)
+class GoodOfferControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    GoodService goodService;
+    GoodOfferService goodOfferService;
 
     private static final Long GOODID = 1L;
 
@@ -39,7 +39,7 @@ class GoodControllerTest {
 
 
         //given
-        given(goodService.readPerOneGood(GOODID)).willReturn(
+        given(goodOfferService.readPerOneGood(GOODID)).willReturn(
                 GoodDto.Response.builder()
                         .offerNickName("우리집 고양이 쵸비")
                         .mainCategory(MainCategory.CAT)
@@ -69,7 +69,7 @@ class GoodControllerTest {
                 .andDo(print());
 
 
-        verify(goodService).readPerOneGood(GOODID);
+        verify(goodOfferService).readPerOneGood(GOODID);
 
     }
 }
