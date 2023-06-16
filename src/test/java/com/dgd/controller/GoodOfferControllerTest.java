@@ -48,7 +48,7 @@ class GoodOfferControllerTest {
                         .description("쵸비가 살쪄서 못먹는데요 의사쌤이 먹지말래요")
                         .location("경기도 서울시 바주카포동")
                         .status(Status.SHARING)
-                        .view_cnt(1L)
+                        .viewCnt(1L)
                         .goodImageList(anyList())
                         .build()
         );

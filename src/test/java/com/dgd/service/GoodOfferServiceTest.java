@@ -95,7 +95,7 @@ class GoodOfferServiceTest {
         Assertions.assertEquals(response.getDescription(),givenGood.getDescription());
         Assertions.assertEquals(response.getStatus(),givenGood.getStatus());
         Assertions.assertEquals(response.getGoodImageList(),givenGood.getGoodImageList());
-        Assertions.assertEquals(response.getView_cnt(),givenGood.getViewCnt());
+        Assertions.assertEquals(response.getViewCnt(),givenGood.getViewCnt());
 
 
         verify(goodRepository).findById(1L);

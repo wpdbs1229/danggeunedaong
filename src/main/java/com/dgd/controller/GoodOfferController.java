@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/good")
+@RequestMapping("/good/offer")
 @RequiredArgsConstructor
 public class GoodOfferController {
 
@@ -20,7 +20,7 @@ public class GoodOfferController {
      * @param goodId
      * @return
      */
-    @GetMapping("/offer/info")
+    @GetMapping("/info")
     public ResponseEntity<?> readPerOneGood(@Valid @RequestParam Long goodId) {
         var response = goodOfferService.readPerOneGood(goodId);
         return ResponseEntity.ok(response);
@@ -31,7 +31,7 @@ public class GoodOfferController {
      * @param request
      * @return
      */
-    @PostMapping("/offer/info")
+    @PostMapping("/info")
     public ResponseEntity<?> saveGood(@RequestBody GoodDto.Request request){
         goodOfferService.saveGood(request);
         return  ResponseEntity.ok("등록이 완료되었습니다.");
@@ -42,7 +42,7 @@ public class GoodOfferController {
      * @param userId
      * @return
      */
-    @GetMapping("/offer")
+    @GetMapping
     public ResponseEntity<?> readGoods(@Valid @RequestParam String userId){
        var result = goodOfferService.readGoods(userId);
         return ResponseEntity.ok(result);
@@ -53,7 +53,7 @@ public class GoodOfferController {
      * @param request
      * @return
      */
-    @PutMapping("/offer/info")
+    @PutMapping("/info")
     public ResponseEntity<?> updateGood(@Valid @RequestBody GoodDto.UpdateRequest request){
         goodOfferService.updateGoods(request);
         return ResponseEntity.ok("수정이 완료되었습니다 :)");
@@ -64,7 +64,7 @@ public class GoodOfferController {
      * @param goodId
      * @return
      */
-    @DeleteMapping("/offer/info")
+    @DeleteMapping("/info")
     public ResponseEntity<?> deleteGood(@Valid @RequestParam Long goodId){
         goodOfferService.deleteGood(goodId);
         return ResponseEntity.ok("삭제가 완료되었습니다 :)");
