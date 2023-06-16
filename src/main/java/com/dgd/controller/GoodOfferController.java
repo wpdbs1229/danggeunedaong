@@ -48,10 +48,26 @@ public class GoodOfferController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 상품 정보 수정
+     * @param request
+     * @return
+     */
     @PutMapping("/offer/info")
     public ResponseEntity<?> updateGood(@Valid @RequestBody GoodDto.UpdateRequest request){
         goodOfferService.updateGoods(request);
         return ResponseEntity.ok("수정이 완료되었습니다 :)");
+    }
+
+    /**
+     * 상품 삭제
+     * @param goodId
+     * @return
+     */
+    @DeleteMapping("/offer/info")
+    public ResponseEntity<?> deleteGood(@Valid @RequestParam Long goodId){
+        goodOfferService.deleteGood(goodId);
+        return ResponseEntity.ok("삭제가 완료되었습니다 :)");
     }
 
 
