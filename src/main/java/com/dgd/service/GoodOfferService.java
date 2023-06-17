@@ -54,19 +54,19 @@ public class GoodOfferService {
      * @param userId
      * @return
      */
-    public List<GoodDto.Responses> readGoods(String userId){
+    public List<GoodDto.MyResponseList> readGoods(String userId){
         User user = userRepository.findByUserId(userId)
                 .orElseThrow( () -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
         List<Good> goods = goodRepository.findAllByUser(user);
 
-        List<GoodDto.Responses> responses = new ArrayList<>();
+        List<GoodDto.MyResponseList> respons = new ArrayList<>();
         for (Good good : goods){
             Integer sharingApplicationNum = sharingApplicationRepository.countByGood(good);
-            responses.add(good.toResponsesDto(sharingApplicationNum));
+            respons.add(good.toResponsesDto(sharingApplicationNum));
         }
 
-        return responses;
+        return respons;
     }
 
     /**

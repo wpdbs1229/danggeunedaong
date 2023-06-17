@@ -22,8 +22,8 @@ public class GoodOfferController {
      */
     @GetMapping("/info")
     public ResponseEntity<?> readPerOneGood(@Valid @RequestParam Long goodId) {
-        var response = goodOfferService.readPerOneGood(goodId);
-        return ResponseEntity.ok(response);
+        var result = goodOfferService.readPerOneGood(goodId);
+        return ResponseEntity.ok(result);
     }
 
     /**

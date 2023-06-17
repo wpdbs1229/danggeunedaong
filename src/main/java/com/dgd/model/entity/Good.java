@@ -59,6 +59,7 @@ public class Good extends Base {
         this.status = form.getStatus();
         this.goodImageList = form.getGoodImageList();
     }
+
     public GoodDto.Response toResponseDto(User user){
         return GoodDto.Response.builder()
                 .offerNickName(user.getNickName())
@@ -74,14 +75,23 @@ public class Good extends Base {
                 .build();
     }
 
-    public GoodDto.Responses toResponsesDto(Integer sharingApplicationNum){
-        return GoodDto.Responses.builder()
+    public GoodDto.MyResponseList toResponsesDto(Integer sharingApplicationNum){
+        return GoodDto.MyResponseList.builder()
                 .title(this.title)
-                .featuredImage(this.goodImageList.get(0))
+                .featuredImage(this.goodImageList)
                 .updatedAt(this.getUpdatedAt())
                 .location(this.getUser().getLocation())
                 .sharingApplicationNum(sharingApplicationNum)
                 .build();
+    }
+
+    public GoodDto.ResponseList toResponsesDto(){
+        return  GoodDto.ResponseList.builder()
+                .title(this.title)
+                .location(this.getUser().getLocation())
+                .featuredImages(this.goodImageList)
+                .build();
+
     }
 
 }
