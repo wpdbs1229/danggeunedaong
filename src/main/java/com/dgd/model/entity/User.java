@@ -23,17 +23,28 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String userId;
+
     @Column(nullable = false)
     private String nickName;
+
     @Column(nullable = false)
     private String password;
+
     private String location; // DB 저장용 지역 이름
     private Double latitude; // 위도
     private Double longitude; // 경도
     private String profileUrl;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<SharingApplication> sharingApplications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Good> goods;
 //    @JsonIgnore
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
 //    private List<Pet> petList;
@@ -45,6 +56,7 @@ public class User {
 //    private SocialType socialType; // KAKAO, NAVER
 //    private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
 //    private String token;
+
 //    public void authorizeUser() { // 유저 권한 설정
 //        this.role = Role.USER;
 //    }

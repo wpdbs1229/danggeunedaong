@@ -7,6 +7,7 @@ import com.dgd.model.type.SubCategory;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class Good extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @OneToMany(mappedBy = "good", orphanRemoval = true)
+    private List<SharingApplication> sharingApplications;
+
     @ManyToOne
     private User user;
 
@@ -32,10 +36,10 @@ public class Good extends Base {
     @Enumerated(EnumType.STRING)
     private SubCategory subCategory;
 
-    @NotEmpty
+    @NotBlank
     private String title;
 
-    @NotEmpty
+    @NotBlank
     private String description;
 
     private Double latitude;
@@ -48,6 +52,7 @@ public class Good extends Base {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> goodImageList;
 
+    @Column(nullable = false)
     private Long viewCnt;
 
 
