@@ -34,22 +34,22 @@ public class User {
     private Double longitude; // 경도
     private String profileUrl;
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
-    private List<Pet> petList;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Enumerated(EnumType.STRING)
-    private SocialType socialType; // KAKAO, NAVER
-    private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
-    private String token;
-    public void authorizeUser() { // 유저 권한 설정
-        this.role = Role.USER;
-    }
-
-    public void addPet(Pet pet) {
-        petList.add(pet);
-    }
+//    @JsonIgnore
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+//    private List<Pet> petList;
+//
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
+//
+//    @Enumerated(EnumType.STRING)
+//    private SocialType socialType; // KAKAO, NAVER
+//    private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
+//    private String token;
+//    public void authorizeUser() { // 유저 권한 설정
+//        this.role = Role.USER;
+//    }
+//
+//    public void addPet(Pet pet) {
+//        petList.add(pet);
+//    }
 }

@@ -16,20 +16,31 @@ public class SharingApplicationController {
 
     private final SharingApplicationService sharingApplicationService;
 
+    /**
+     * 나눔신청
+     * @param form
+     * @return
+     */
     @PostMapping("/application")
-    public ResponseEntity<?> saveSharingApplication(
-            @Validated @RequestBody SharingApplicationDto.Request form) {
-        try {
+    public ResponseEntity<?> saveSharingApplication(@Validated @RequestBody SharingApplicationDto.Request form) {
             sharingApplicationService.applySharing(form);
             return ResponseEntity.ok("나눔 신청이 완료되었습니다.");
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body("이미 신청이 완료된 상품입니다.");
-        }
     }
 
+    /**
+     * 나눔신청목록 불러오기
+     * @param goodId
+     * @return
+     */
     @GetMapping("/application")
     public ResponseEntity<?> readSharingApplication(@RequestParam Long goodId){
         var responses = sharingApplicationService.readSharingApplicationStatus(goodId);
         return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/application")
+    public ResponseEntity<?> cancelSharingApplication(@RequestParam Long sharingApplicationId){
+        sharingApplicationService.cancelSharingApplication(sharingApplicationId);
+        return ResponseEntity.ok("신청취소가 완료되었습니다.");
     }
 }

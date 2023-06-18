@@ -56,7 +56,6 @@ public class SharingApplicationService {
 
     /**
      * 나눔 신청 목록 불러오기
-     *
      * @param goodId
      * @return
      */
@@ -87,6 +86,16 @@ public class SharingApplicationService {
         }
 
         return responses;
+    }
+
+    public void cancelSharingApplication(Long sharingApplicationId){
+        boolean exists = sharingApplicationRepository.existsById(sharingApplicationId);
+
+        if (!exists){
+            throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_APPLICATION);
+        }
+
+        sharingApplicationRepository.deleteById(sharingApplicationId);
     }
 
 }
