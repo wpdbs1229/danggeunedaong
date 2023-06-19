@@ -1,5 +1,5 @@
 package com.dgd.model.type;
 
-public enum PetType {
+public enum MainCategory {
     DOG, CAT
 }

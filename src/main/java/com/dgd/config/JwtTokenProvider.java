@@ -8,39 +8,59 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.UUID;
 
 import static com.dgd.exception.message.AuthErrorMessage.INVALID_TOKEN;
+import static com.dgd.exception.message.AuthErrorMessage.USER_NOT_FOUND;
 
 @Slf4j
 @Component
 public class JwtTokenProvider {
     @Value("${jwt.secret.key}")
     private String secretKey;
+    @Value("${jwt.access.header}")
+    private String accessHeader;
+    @Value("${jwt.refresh.header}")
+    private String refreshHeader;
 
     private final Long accessTokenValidTime = 1000L * 60 * 60 * 6;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L; // 2 일
 
 
 
-    public String createToken(String userId, Long validTime) {
+    public String createAccessToken(String userId, Long validTime) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(accessHeader)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
-    public Token createAccessToken(String payload) {
-        String token = createToken(payload, accessTokenValidTime);
+    public String createRefreshToken(String userId, Long validTime) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(refreshHeader)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + validTime))
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
+
+    public Token receiveAccessToken(String userId) {
+        String token = createAccessToken(userId, accessTokenValidTime);
         return new Token(token, accessTokenValidTime);
     }
-    public Token createRefreshToken() {
-        String token = createToken(UUID.randomUUID().toString(), refreshTokenValidTime);
+    
+    public Token receiveRefreshToken(String userId) { // 어떤 행동을 하면 매번 토큰 갱신
+        String token = createRefreshToken(userId, refreshTokenValidTime);
         return new Token(token, refreshTokenValidTime);
     }
 
@@ -72,5 +92,14 @@ public class JwtTokenProvider {
             log.warn("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    private Claims parseClaims(String accessToken) {
+
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody();
+        } catch (AuthenticationException e) {
+            throw new AuthenticationException(USER_NOT_FOUND);
+        }
     }
 }

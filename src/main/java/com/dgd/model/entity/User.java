@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -17,17 +18,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @NotBlank
     private String userId;
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String nickName;
-    @Column(nullable = false)
+    @NotBlank
     private String password;
     private String location; // DB 저장용 지역 이름
     private String latitude; // 위도
     private String longitude; // 경도
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId", orphanRemoval = true)
     private List<Pet> petList;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -39,6 +40,9 @@ public class User {
         this.role = Role.USER;
     }
 
+    public String getRoleKey(){
+        return this.role.getKey();
+    }
     public void addPet(Pet pet) {
         petList.add(pet);
     }

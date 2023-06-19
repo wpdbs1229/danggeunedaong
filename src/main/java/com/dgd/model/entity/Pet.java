@@ -2,12 +2,11 @@ package com.dgd.model.entity;
 
 import com.dgd.model.type.PetGender;
 import com.dgd.model.type.PetSize;
-import com.dgd.model.type.PetType;
+import com.dgd.model.type.MainCategory;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -19,12 +18,12 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
-    private PetType petType;
+    private MainCategory petType;
     @Column(nullable = false)
     private String petName;
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date petAge;
+    private int petAge;
     @Enumerated(EnumType.STRING)
     private PetGender petGender;
     @Enumerated(EnumType.STRING)

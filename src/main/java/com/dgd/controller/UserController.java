@@ -6,10 +6,7 @@ import com.dgd.model.entity.User;
 import com.dgd.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -28,5 +25,10 @@ public class UserController {
     public String signIn(@RequestBody @Valid UserSignInDto dto) {
         userService.signIn(dto);
         return "로그인";
+    }
+
+    @GetMapping("oauth2/social/kakao")
+    public @ResponseBody String kakaoCallback(String code) { // 데이터 리턴
+        return "데이터 저장 code : " + code;
     }
 }
