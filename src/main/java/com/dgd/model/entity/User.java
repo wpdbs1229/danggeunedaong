@@ -1,4 +1,6 @@
 package com.dgd.model.entity;
+
+import javax.persistence.*;
 import com.dgd.model.type.Role;
 import com.dgd.model.type.SocialType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -6,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+
 import java.util.List;
 
 @Entity
@@ -20,7 +23,6 @@ public class User {
     private Long id;
     @NotBlank
     private String userId;
-//    @Column(nullable = false)
     private String nickName;
     @NotBlank
     private String password;
@@ -46,4 +48,15 @@ public class User {
     public void addPet(Pet pet) {
         petList.add(pet);
     }
+
+    private String profileUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<SharingApplication> sharingApplications;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Good> goods;
+
 }
