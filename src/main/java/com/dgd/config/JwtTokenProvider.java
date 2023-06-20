@@ -15,11 +15,11 @@ import static com.dgd.exception.message.AuthErrorMessage.USER_NOT_FOUND;
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    @Value("${jwt.secret.key}")
+    @Value("${spring.jwt.secret.key}")
     private String secretKey;
-    @Value("${jwt.access.header}")
+    @Value("${spring.jwt.access.header}")
     private String accessHeader;
-    @Value("${jwt.refresh.header}")
+    @Value("${spring.jwt.refresh.header}")
     private String refreshHeader;
 
     private final Long accessTokenValidTime = 1000L * 60 * 60 * 6;

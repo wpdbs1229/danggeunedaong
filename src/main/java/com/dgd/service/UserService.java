@@ -3,13 +3,11 @@ package com.dgd.service;
 import com.dgd.exception.error.AuthenticationException;
 import com.dgd.model.dto.UserSignInDto;
 import com.dgd.model.dto.UserSignUpDto;
-import com.dgd.model.dto.UserUpdateDto;
 import com.dgd.model.entity.Token;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.TokenRepository;
 import com.dgd.model.repo.UserRepository;
 import com.dgd.config.JwtTokenProvider;
-import com.dgd.model.type.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,12 +61,12 @@ public class UserService {
         return userNickName;
     }
 
-    public User updateUser(UserUpdateDto userUpdateDto) { // TODO 소셜 로그인 유저 추가 정보 기입
-       User user = User.builder()
-               .build();
-
-       user.authorizeUser();
-
-       return user;
-    }
+//    public User updateUser(UserUpdateDto userUpdateDto) { // TODO 소셜 로그인 유저 추가 정보 기입
+//       User user = User.builder()
+//               .build();
+//
+//       user.authorizeUser();
+//
+//       return user;
+//    }
 }

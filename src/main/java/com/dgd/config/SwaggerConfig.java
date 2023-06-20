@@ -19,7 +19,7 @@ import java.util.Set;
 public class SwaggerConfig {
     @Bean
     public Docket restApi() {
-        return new Docket(DocumentationType.OAS_30)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .useDefaultResponseMessages(true)

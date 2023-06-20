@@ -1,7 +1,5 @@
 package com.dgd.config;
 
-import com.dgd.model.entity.User;
-import com.dgd.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

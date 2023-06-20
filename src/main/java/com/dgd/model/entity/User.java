@@ -27,8 +27,8 @@ public class User {
     @NotBlank
     private String password;
     private String location; // DB 저장용 지역 이름
-    private String latitude; // 위도
-    private String longitude; // 경도
+    private double latitude; // 위도
+    private double longitude; // 경도
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId", orphanRemoval = true)
     private List<Pet> petList;

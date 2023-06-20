@@ -27,8 +27,5 @@ public class UserController {
         return "로그인";
     }
 
-    @GetMapping("oauth2/social/kakao")
-    public @ResponseBody String kakaoCallback(String code) { // 데이터 리턴
-        return "데이터 저장 code : " + code;
-    }
+
 }
