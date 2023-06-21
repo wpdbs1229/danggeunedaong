@@ -98,4 +98,11 @@ public class GoodOfferService {
         goodRepository.deleteById(goodId);
     }
 
+    public void updateStatus(Long goodId) {
+        Good good = goodRepository.findById(goodId)
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+
+        good.updateStatus(good.getStatus());
+        goodRepository.save(good);
+    }
 }

@@ -5,19 +5,16 @@ import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
 import com.dgd.model.type.SubCategory;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.dgd.model.entity.QGood.good;
 
 @RequiredArgsConstructor

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class SharingApplicationController {
      * @return
      */
     @PostMapping("/application")
-    public ResponseEntity<?> saveSharingApplication(@Validated @RequestBody SharingApplicationDto.Request form) {
+    public ResponseEntity<?> saveSharingApplication(@Valid @RequestBody SharingApplicationDto.Request form) {
             sharingApplicationService.applySharing(form);
             return ResponseEntity.ok("나눔 신청이 완료되었습니다.");
     }
