@@ -8,7 +8,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
@@ -63,6 +62,15 @@ public class Good extends Base {
         this.description = form.getDescription();
         this.status = form.getStatus();
         this.goodImageList = form.getGoodImageList();
+    }
+
+    public void updateStatus(Status status){
+        if (Status.SHARING.equals(status)){
+            this.status = Status.COMPLETED;
+        } else {
+            this.status = Status.SHARING;
+        }
+
     }
 
     public GoodDto.Response toResponseDto(User user){

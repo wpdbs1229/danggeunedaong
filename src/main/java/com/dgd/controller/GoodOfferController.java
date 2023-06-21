@@ -1,6 +1,7 @@
 package com.dgd.controller;
 
 import com.dgd.model.dto.GoodDto;
+import com.dgd.model.type.Status;
 import com.dgd.service.GoodOfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class GoodOfferController {
      * @return
      */
     @PostMapping("/info")
-    public ResponseEntity<?> saveGood(@RequestBody GoodDto.Request request){
+    public ResponseEntity<?> saveGood(@Valid @RequestBody GoodDto.Request request){
         goodOfferService.saveGood(request);
         return  ResponseEntity.ok("등록이 완료되었습니다.");
     }
@@ -59,6 +60,16 @@ public class GoodOfferController {
         return ResponseEntity.ok("수정이 완료되었습니다 :)");
     }
 
+    /**
+     * 나눔 상태 변경
+     * @param goodId
+     * @return
+     */
+    @PatchMapping("/status")
+    public ResponseEntity<?> updateStatus(@Valid @RequestParam Long goodId){
+        goodOfferService.updateStatus(goodId);
+        return ResponseEntity.ok("나눔 상태가 변경되었습니다.");
+    }
     /**
      * 상품 삭제
      * @param goodId

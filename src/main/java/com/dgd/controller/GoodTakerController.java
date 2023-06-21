@@ -1,5 +1,8 @@
 package com.dgd.controller;
 
+import com.dgd.model.type.MainCategory;
+import com.dgd.model.type.Status;
+import com.dgd.model.type.SubCategory;
 import com.dgd.service.GoodTakerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,7 @@ public class GoodTakerController {
 
     private final GoodTakerService goodTakerService;
 
+
     /**
      * 나눔 상품 상세 조회
      * @param goodId
@@ -33,17 +37,30 @@ public class GoodTakerController {
     }
 
     /**
-     * 상품 제목 기반 검색 추후 위, 경도, 카테고리 기반으로 변경 예정
+     * 상품 검색
      * @param keyword
-     * @param category
+     * @param minLatitude
+     * @param minLongitude
+     * @param maxLatitude
+     * @param maxLongitude
+     * @param mainCategory
+     * @param subCategory
+     * @param status
      * @param pageable
      * @return
      */
     @GetMapping("/search/title")
-    public ResponseEntity<?> searchTitle(@Valid @RequestParam String keyword,
-                                         @RequestParam String category,
-                                         @PageableDefault(sort = "id", direction = Sort.Direction.DESC )Pageable pageable){
-        var result = goodTakerService.searchTitle(keyword, pageable);
+    public ResponseEntity<?> searchTitle( @RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) Double minLatitude,
+                                          @RequestParam(required = false) Double minLongitude,
+                                          @RequestParam(required = false) Double maxLatitude,
+                                          @RequestParam(required = false) Double maxLongitude,
+                                          @RequestParam(required = false) MainCategory mainCategory,
+                                          @RequestParam(required = false) SubCategory subCategory,
+                                          @RequestParam(required = false) Status status,
+                                          @PageableDefault(sort = "id", direction = Sort.Direction.DESC )Pageable pageable){
+        var result = goodTakerService.searchGoods(keyword, minLatitude,minLongitude,maxLatitude,maxLongitude,mainCategory,subCategory,status,pageable);
+        System.out.println("1");
         return ResponseEntity.ok(result);
     }
 }
