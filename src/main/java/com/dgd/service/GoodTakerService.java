@@ -4,7 +4,11 @@ import com.dgd.exception.ApplicationErrorCode;
 import com.dgd.exception.ApplicationException;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.entity.Good;
+import com.dgd.model.repo.GoodQueryRepository;
 import com.dgd.model.repo.GoodRepository;
+import com.dgd.model.type.MainCategory;
+import com.dgd.model.type.Status;
+import com.dgd.model.type.SubCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +23,7 @@ public class GoodTakerService {
 
 
     private final GoodRepository goodRepository;
+    private final GoodQueryRepository goodQueryRepository;
     /**
      * 상품 상세조회
      * @param goodId
@@ -32,13 +37,28 @@ public class GoodTakerService {
     }
 
     /**
-     * 제목 검색
+     * 나눔 상품 검색
      * @param keyword
+     * @param minLatitude
+     * @param minLongitude
+     * @param maxLatitude
+     * @param maxLongitude
+     * @param mainCategory
+     * @param subCategory
+     * @param status
      * @param pageable
      * @return
      */
-    public List<GoodDto.ResponseList> searchTitle(String keyword, Pageable pageable){
-        Page<Good> goods = goodRepository.findByTitleContaining(keyword, pageable);
+    public List<GoodDto.ResponseList> searchGoods(final String keyword,
+                                                  final Double minLatitude,
+                                                  final Double minLongitude,
+                                                  final Double maxLatitude,
+                                                  final Double maxLongitude,
+                                                  final MainCategory mainCategory,
+                                                  final SubCategory subCategory,
+                                                  final Status status,
+                                                  final Pageable pageable){
+        Page<Good> goods = (Page<Good>) goodQueryRepository.findWithSearchConditions(keyword, minLatitude,minLongitude,maxLatitude,maxLongitude,mainCategory,subCategory,status,pageable);
 
         List<GoodDto.ResponseList> response = new ArrayList<>();
 

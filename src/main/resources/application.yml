@@ -9,3 +9,18 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+  redis:
+    host: localhost
+    port: 6379
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+jwt:
+  secret:
+    key: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsInVzZXJJZCI6IkRhZW5nR2V1biIsImV4cCI6MTMxMjM0MTUxfQ.5mR_PkrIwrZqRO-oc3Cxr8zpRv_Fz2Cw2QDJ5kyLapm4XgNRU6R-kyStzuarx7WEH7Nq5N-MHY_EMODl_H_KKw
+  access:
+    header: Authorization
+  refresh:
+    header: Authorization-refresh
