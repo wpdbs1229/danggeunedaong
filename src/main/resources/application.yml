@@ -30,8 +30,8 @@ cloud:
     s3:
       bucket: dgd-image-storage
     credentials:
-      access-key: AKIAT5OU6ZCZ5CWGFN6J
-      secret-key: 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
+      access-key: 
+      secret-key: 
     region:
       static: ap-northeast-2
       auto: false
