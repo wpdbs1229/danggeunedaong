@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class SharingApplicationService {
      */
     @Transactional
     public void applySharing(SharingApplicationDto.Request form) {
-        Distance dis = new Distance();
+        EtcFeat dis = new EtcFeat();
 
         Good good = goodRepository.findById(form.getGoodId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));

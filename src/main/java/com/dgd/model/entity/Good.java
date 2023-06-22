@@ -4,6 +4,7 @@ import com.dgd.model.dto.GoodDto;
 import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
 import com.dgd.model.type.SubCategory;
+import com.dgd.service.EtcFeat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -74,13 +75,15 @@ public class Good extends Base {
     }
 
     public GoodDto.Response toResponseDto(User user){
+        EtcFeat etcFeat = new EtcFeat();
+
         return GoodDto.Response.builder()
                 .offerNickName(user.getNickName())
                 .mainCategory(this.mainCategory)
                 .subCategory(this.subCategory)
                 .title(this.title)
                 .description(this.description)
-                .location(user.getLocation())
+                .location(etcFeat.getAddress(user.getLocation()))
                 .status(this.status)
                 .viewCnt(this.viewCnt)
                 .goodImageList(this.goodImageList)

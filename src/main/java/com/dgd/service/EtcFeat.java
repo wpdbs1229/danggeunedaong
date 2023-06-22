@@ -1,6 +1,6 @@
 package com.dgd.service;
 
-public class Distance {
+public class EtcFeat {
 
     public double getDistance(double lat1, double lon1, double lat2, double lon2) {
 
@@ -19,5 +19,15 @@ public class Distance {
         );
 
         return d;
+    }
+
+    public String getAddress(String address){
+        StringBuffer sb = new StringBuffer();
+        String[] answer = address.split(" ");
+        for (int i = 0; i <3; i++) {
+            sb.append(answer[i]);
+        }
+
+        return sb.toString();
     }
 }

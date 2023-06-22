@@ -1,7 +1,9 @@
 package com.dgd.service;
 
-import com.dgd.domain.dto.Point;
-import com.dgd.domain.type.SearchType;
+import com.dgd.model.dto.Point;
+import com.dgd.model.type.SearchType;
+import com.dgd.exception.ApplicationErrorCode;
+import com.dgd.exception.ApplicationException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Service
-public class MapService {
+public class PointService {
     @Value("${map.key}")
     private String apiKey;
     private final String EPSG = "epsg:4326";
@@ -44,7 +46,7 @@ public class MapService {
             String jsonLatitude = jspoitn.get("y").getAsString();
             return new Point(Double.parseDouble(jsonLongitude),Double.parseDouble(jsonLatitude));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationException(ApplicationErrorCode.NOT_VALID_ADDRESS);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.dgd.domain.dto;
+package com.dgd.model.dto;
 
 
 import lombok.Getter;
