@@ -24,3 +24,26 @@ jwt:
     header: Authorization
   refresh:
     header: Authorization-refresh
+
+cloud:
+  aws:
+    s3:
+      bucket: dgd-image-storage
+    credentials:
+      access-key: AKIAT5OU6ZCZ5CWGFN6J
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
+
+map:
+  key: 292C7446-D4E3-33A3-BB50-38356FD4CC5E

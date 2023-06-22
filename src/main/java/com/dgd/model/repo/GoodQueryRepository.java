@@ -57,7 +57,7 @@ public class GoodQueryRepository {
 
 
     private BooleanExpression toContainsKeyword(String keyword){
-        if (keyword.equals(null)||StringUtils.hasText(keyword) ){
+        if (keyword == null||StringUtils.hasText(keyword) ){
             return null;
         }
         return good.title.contains(keyword);
