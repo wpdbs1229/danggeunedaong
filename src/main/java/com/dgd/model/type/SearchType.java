@@ -1,4 +1,4 @@
-package com.dgd.domain.type;
+package com.dgd.model.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
