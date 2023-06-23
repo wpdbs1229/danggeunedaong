@@ -1,6 +1,6 @@
 package com.dgd.controller;
 
-import com.dgd.config.JwtTokenProvider;
+
 import com.dgd.model.dto.UpdateUserDto;
 import com.dgd.model.dto.UserSignInDto;
 import com.dgd.model.dto.UserSignUpDto;

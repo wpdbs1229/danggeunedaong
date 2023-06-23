@@ -41,8 +41,8 @@ public class KakaoOauthService {
     private final UserService userService;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-authentication-method}")
-    private String kakaoClientAuthenticationMethod;
+//    @Value("${spring.security.oauth2.client.registration.kakao.client-authentication-method}")
+    private final String kakaoClientAuthenticationMethod = "POST";
 
     public String createKakaoUser(String token, HttpServletResponse response) throws AuthenticationException {
 

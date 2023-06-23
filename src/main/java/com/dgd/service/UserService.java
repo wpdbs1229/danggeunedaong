@@ -33,7 +33,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
     private final CookieProvider cookieProvider;
-    private final MapService mapService;
+    private final PointService pointService;
 
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
@@ -46,7 +46,7 @@ public class UserService {
         if (userRepository.findByNickName(signUpDto.getNickName()).isPresent()) {
             throw new AuthenticationException(DUPLICATED_NICKNAME);
         }
-        Point point = mapService.getMapString(signUpDto.getLocation());
+        Point point = pointService.getMapString(signUpDto.getLocation());
 
 
         User user = User.builder()
@@ -98,7 +98,7 @@ public class UserService {
     }
 
     public User updateUser(UpdateUserDto updateUserDto) {
-        Point point = mapService.getMapString(updateUserDto.getLocation());
+        Point point = pointService.getMapString(updateUserDto.getLocation());
         double latitude = point.getLatitude();
         double longitude = point.getLongitude();
 
