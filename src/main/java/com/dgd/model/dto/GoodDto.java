@@ -1,6 +1,7 @@
 package com.dgd.model.dto;
 
 import com.dgd.model.entity.Good;
+import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.entity.User;
 import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
@@ -25,12 +26,12 @@ public class GoodDto {
         private String title;
         private String description;
         private Status status;
-//        private List<String> goodImageList;
 
 
 
 
-        public Good toEntity(User user, Long viewCnt, Status status, List<String> goodImages){
+
+        public Good toEntity(User user, GoodViewCount viewCnt, Status status, List<String> goodImages){
             return Good.builder()
                     .user(user)
                     .mainCategory(this.mainCategory)
@@ -41,7 +42,7 @@ public class GoodDto {
                     .longitude(user.getLongitude())
                     .status(status)
                     .goodImageList(goodImages)
-                    .viewCnt(viewCnt)
+                    .goodViewCount(viewCnt)
                     .build();
         }
     }

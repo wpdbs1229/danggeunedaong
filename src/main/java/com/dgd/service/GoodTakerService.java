@@ -4,8 +4,10 @@ import com.dgd.exception.ApplicationErrorCode;
 import com.dgd.exception.ApplicationException;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.entity.Good;
+import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.repo.GoodQueryRepository;
 import com.dgd.model.repo.GoodRepository;
+import com.dgd.model.repo.GoodViewCountRepository;
 import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
 import com.dgd.model.type.SubCategory;
@@ -24,6 +26,7 @@ public class GoodTakerService {
 
     private final GoodRepository goodRepository;
     private final GoodQueryRepository goodQueryRepository;
+    private final GoodViewCountRepository goodViewCountRepository;
     /**
      * 상품 상세조회
      * @param goodId
@@ -33,6 +36,9 @@ public class GoodTakerService {
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(()-> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
+        good.getGoodViewCount().updateViewCount(good.getGoodViewCount());
+
+        goodViewCountRepository.save(good.getGoodViewCount());
         return good.toResponseDto(good.getUser());
     }
 
