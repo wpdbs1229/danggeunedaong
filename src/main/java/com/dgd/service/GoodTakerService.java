@@ -49,7 +49,7 @@ public class GoodTakerService {
      * @param pageable
      * @return
      */
-    public List<GoodDto.ResponseList> searchGoods(final String keyword,
+    public GoodDto.WholeResponseList searchGoods(final String keyword,
                                                   final Double minLatitude,
                                                   final Double minLongitude,
                                                   final Double maxLatitude,
@@ -65,6 +65,11 @@ public class GoodTakerService {
         for (Good good :goods){
             response.add(good.toResponsesDto());
         }
-        return response;
+
+        GoodDto.WholeResponseList wholeResponseList = GoodDto.WholeResponseList.builder()
+                .responseLists(response)
+                .totalPageNum(goods.getTotalPages())
+                .build();
+        return wholeResponseList;
     }
 }

@@ -1,17 +1,22 @@
 package com.dgd.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.dgd.exception.ApplicationErrorCode;
 import com.dgd.exception.ApplicationException;
+import com.dgd.model.dto.FileDetail;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.User;
+import com.dgd.model.repo.AmazonS3ResourceStorage;
 import com.dgd.model.repo.GoodRepository;
 import com.dgd.model.repo.SharingApplicationRepository;
 import com.dgd.model.repo.UserRepository;
 import com.dgd.model.type.Status;
+import com.dgd.util.MultipartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,8 @@ public class GoodOfferService {
     private final GoodRepository goodRepository;
     private final UserRepository userRepository;
     private final SharingApplicationRepository sharingApplicationRepository;
+    private final AmazonS3ResourceStorage amazonS3ResourceStorage;
+    private final AmazonS3Client amazonS3Client;
 
     /**
      * 상품 상세조회
@@ -41,12 +48,22 @@ public class GoodOfferService {
      * @param form
      */
     @Transactional
-    public void saveGood(GoodDto.Request form){
+    public void saveGood(GoodDto.Request form, List<MultipartFile> multipartFiles){
         User user = userRepository.findByUserId(form.getUserId())
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
+        List<String> goodImages = new ArrayList<>();
+
+        for (MultipartFile multipartFile : multipartFiles){
+            FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
+            String path = fileDetail.getId()+"."+fileDetail.getFormat();
+            amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
+
+            goodImages.add(amazonS3Client.getUrl("dgd-image-storage",path).toString());
+        }
+
         Long viewCnt = 0L;
-        goodRepository.save(form.toEntity(user,viewCnt, Status.SHARING));
+        goodRepository.save(form.toEntity(user,viewCnt, Status.SHARING, goodImages));
     }
 
     /**
@@ -60,13 +77,13 @@ public class GoodOfferService {
 
         List<Good> goods = goodRepository.findAllByUser(user);
 
-        List<GoodDto.MyResponseList> respons = new ArrayList<>();
+        List<GoodDto.MyResponseList> response = new ArrayList<>();
         for (Good good : goods){
             Integer sharingApplicationNum = sharingApplicationRepository.countByGood(good);
-            respons.add(good.toResponsesDto(sharingApplicationNum));
+            response.add(good.toResponsesDto(sharingApplicationNum));
         }
 
-        return respons;
+        return response;
     }
 
     /**

@@ -1,13 +1,14 @@
 package com.dgd.controller;
 
 import com.dgd.model.dto.GoodDto;
-import com.dgd.model.type.Status;
 import com.dgd.service.GoodOfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/good/offer")
@@ -33,8 +34,9 @@ public class GoodOfferController {
      * @return
      */
     @PostMapping("/info")
-    public ResponseEntity<?> saveGood(@Valid @RequestBody GoodDto.Request request){
-        goodOfferService.saveGood(request);
+    public ResponseEntity<?> saveGood(@Valid @RequestPart(value = "request") GoodDto.Request request,
+                                      @RequestPart(value = "files") List<MultipartFile> multipartFiles){
+        goodOfferService.saveGood(request, multipartFiles);
         return  ResponseEntity.ok("등록이 완료되었습니다.");
     }
 

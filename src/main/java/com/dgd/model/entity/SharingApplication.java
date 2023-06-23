@@ -35,9 +35,5 @@ public class SharingApplication {
     private LocalDateTime requestedAt;
     private String content;
 
-    public SharingApplicationDto.Response toResponseDto(){
-        return SharingApplicationDto.Response.builder()
 
-                .build();
-    }
 }
