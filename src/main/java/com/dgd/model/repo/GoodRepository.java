@@ -14,4 +14,6 @@ public interface GoodRepository extends JpaRepository<Good, Long> {
     List<Good> findAllByUser(User user);
 
     Page<Good> findByTitleContaining(String keyword, Pageable pageable);
+
+    Optional<User> findUserById (Long id);
 }

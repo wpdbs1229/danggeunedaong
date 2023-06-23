@@ -3,6 +3,7 @@ package com.dgd.service;
 import com.dgd.exception.ApplicationErrorCode;
 import com.dgd.exception.ApplicationException;
 import com.dgd.model.dto.GoodDto;
+import com.dgd.model.dto.MatchUserDto;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.GoodRepository;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -98,4 +100,9 @@ public class GoodOfferService {
         goodRepository.deleteById(goodId);
     }
 
+
+    public boolean matchUser(MatchUserDto matchUserDto) {
+        Optional<User> user = goodRepository.findUserById(matchUserDto.getGoodId());
+        return matchUserDto.getUserId().equals(user.get().getUserId());
+    }
 }

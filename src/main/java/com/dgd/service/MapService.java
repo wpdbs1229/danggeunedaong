@@ -1,7 +1,7 @@
 package com.dgd.service;
 
-import com.dgd.domain.dto.Point;
-import com.dgd.domain.type.SearchType;
+import com.dgd.model.dto.Point;
+import com.dgd.model.type.SearchType;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +19,9 @@ public class MapService {
     @Value("${map.key}")
     private String apiKey;
     private final String EPSG = "epsg:4326";
+    private final SearchType searchType = SearchType.ROAD;
 
-    public Point getMapString(SearchType searchType, String searchAddr){
+    public Point getMapString(String searchAddr){
         StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
         sb.append("?service=address");
         sb.append("&request=getCoord");

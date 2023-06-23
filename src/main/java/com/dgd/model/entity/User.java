@@ -1,6 +1,9 @@
 package com.dgd.model.entity;
 
 import javax.persistence.*;
+
+import com.dgd.model.dto.GoodDto;
+import com.dgd.model.dto.UpdateUserDto;
 import com.dgd.model.type.Role;
 import com.dgd.model.type.SocialType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,7 +40,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // KAKAO, NAVER
     private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
-    private String token;
     public void authorizeUser() { // 유저 권한 설정
         this.role = Role.USER;
     }
@@ -58,5 +60,15 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Good> goods;
+
+    public void update(UpdateUserDto dto){
+        this.location = dto.getLocation();
+        this.nickName = dto.getNickName();
+    }
+
+    public void setLatAndLon (double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
 }

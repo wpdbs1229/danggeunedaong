@@ -44,9 +44,11 @@ public class PetService {
         Pet pet = Pet.builder()
                 .petName(addPetDto.getPetName())
                 .petSize(addPetDto.getPetSize())
+                .petType(addPetDto.getPetType())
                 .petGender(addPetDto.getPetGender())
                 .petSize(addPetDto.getPetSize())
                 .petAge(petAge)
+                .userId(addPetDto.getUserId())
                 .build();
 
         User user = userRepository.findById(addPetDto.getUserId())
