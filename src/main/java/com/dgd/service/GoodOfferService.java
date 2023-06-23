@@ -12,6 +12,7 @@ import com.dgd.model.entity.User;
 import com.dgd.model.repo.*;
 import com.dgd.model.type.Status;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class GoodOfferService {
+
+    @Value("${spring.s3.bucket}")
+    private String bucketName;
 
     private final GoodRepository goodRepository;
     private final GoodViewCountRepository goodViewCountRepository;
@@ -53,18 +57,31 @@ public class GoodOfferService {
         User user = userRepository.findByUserId(form.getUserId())
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
+
+        List<String> goodImages = uploadImage(multipartFiles);
+
+        GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
+        goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
+    }
+
+    /**
+     * S3에 이미지 업로드 및 이미지 객채 경로들 반환
+     * @param multipartFiles
+     * @return
+     */
+    private List<String> uploadImage(List<MultipartFile> multipartFiles) {
         List<String> goodImages = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles){
             FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
-            String path = fileDetail.getId()+"."+fileDetail.getFormat();
+            String path = "images/"+fileDetail.getId()+"."+fileDetail.getFormat();
             amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
 
-            goodImages.add(amazonS3Client.getUrl("dgd-image-storage",path).toString());
+            goodImages.add(String.valueOf(amazonS3Client.getUrl(bucketName,path)));
+
         }
 
-        GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
-        goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
+        return goodImages;
     }
 
     /**
@@ -92,13 +109,33 @@ public class GoodOfferService {
      * @param form
      */
     @Transactional
-    public void updateGoods(GoodDto.UpdateRequest form){
+    public void updateGoods(GoodDto.UpdateRequest form, List<MultipartFile> multipartFiles){
         Good good = goodRepository.findById(form.getGoodId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
-        good.update(form);
+        deleteImage(good);
+        List<String> goodImages = uploadImage(multipartFiles);
+        good.update(form,goodImages);
 
         goodRepository.save(good);
+    }
+
+    /**
+     * S3 이미지 삭제
+     * @param good
+     */
+    private void deleteImage(Good good) {
+        List<String> goodImageList = good.getGoodImageList();
+        for( String goodImage : goodImageList){
+            String keyName = goodImage.substring(58);
+            boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
+            if (isObjectExist){
+                amazonS3Client.deleteObject(bucketName,keyName);
+            } else{
+                throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER);
+            }
+
+        }
     }
 
     /**
@@ -107,15 +144,17 @@ public class GoodOfferService {
      */
     @Transactional
     public void deleteGood(Long goodId){
-        boolean exists = goodRepository.existsById(goodId);
+        Good good = goodRepository.findById(goodId)
+                .orElseThrow( () -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
-        if (!exists){
-            throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD);
-        }
-
+        deleteImage(good);
         goodRepository.deleteById(goodId);
     }
 
+    /**
+     * 나눔 상태 변경
+     * @param goodId
+     */
     public void updateStatus(Long goodId) {
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));

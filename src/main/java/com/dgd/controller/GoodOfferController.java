@@ -58,8 +58,9 @@ public class GoodOfferController {
      * @return
      */
     @PutMapping("/info")
-    public ResponseEntity<?> updateGood(@Valid @RequestBody GoodDto.UpdateRequest request){
-        goodOfferService.updateGoods(request);
+    public ResponseEntity<?> updateGood(@Valid @RequestPart(value = "request") GoodDto.UpdateRequest request,
+                                        @RequestPart(value = "files") List<MultipartFile> multipartFiles){
+        goodOfferService.updateGoods(request,multipartFiles);
         return ResponseEntity.ok("수정이 완료되었습니다 :)");
     }
 
