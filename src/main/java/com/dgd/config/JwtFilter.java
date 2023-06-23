@@ -1,8 +1,12 @@
 package com.dgd.config;
 
+import com.dgd.exception.error.AuthenticationException;
+import com.dgd.exception.message.AuthErrorMessage;
+import com.dgd.model.repo.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,28 +22,27 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static com.dgd.exception.message.AuthErrorMessage.*;
+
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String token = jwtTokenProvider.resolveToken(request);
+        try {
+            if (token != null && jwtTokenProvider.validateAccessToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthenticationByAccessToken(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        } catch (AuthenticationException e) {
+            SecurityContextHolder.clearContext();
+            throw new AuthenticationException(INVALID_TOKEN);
+        }
 
-        // User 에서 UserId 꺼내기
-        String userId = null;
-
-        // 권한 부여하기
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));
-        // Detail
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

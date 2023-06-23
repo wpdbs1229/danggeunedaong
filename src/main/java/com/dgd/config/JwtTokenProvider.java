@@ -1,105 +1,122 @@
 package com.dgd.config;
 
 import com.dgd.exception.error.AuthenticationException;
-import com.dgd.model.entity.Token;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.Base64;
 import java.util.Date;
 
 import static com.dgd.exception.message.AuthErrorMessage.INVALID_TOKEN;
-import static com.dgd.exception.message.AuthErrorMessage.USER_NOT_FOUND;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    @Value("${spring.jwt.secret.key}")
+    @Value("${jwt.secret.key}")
     private String secretKey;
-    @Value("${spring.jwt.access.header}")
-    private String accessHeader;
-    @Value("${spring.jwt.refresh.header}")
-    private String refreshHeader;
 
+    private static final String AUTHORITIES_KEY = "Authorization";
+    private static final String BEARER_TYPE = "Bearer";
     private final Long accessTokenValidTime = 1000L * 60 * 60 * 6;
-    private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L; // 2 일
+    private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
+    private final UserDetailsService userDetailsService;
 
+    public String generateAccessToken(Authentication authentication) {
+        Claims claims = Jwts.claims().setSubject(authentication.getName());
 
-    public String createAccessToken(String userId, Long validTime) {
-        Claims claims = Jwts.claims();
-        claims.put("userId", userId);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(accessHeader)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validTime))
-                .signWith(SignatureAlgorithm.HS512, secretKey)
-                .compact();
-    }
-
-    public String createRefreshToken(String userId, Long validTime) {
-        Claims claims = Jwts.claims();
-        claims.put("userId", userId);
+        Date now = new Date();
+        Date expiresIn = new Date(now.getTime() + accessTokenValidTime);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(refreshHeader)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validTime))
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .setIssuedAt(now)
+                .setExpiration(expiresIn)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
+    public String generateRefreshToken(Authentication authentication) {
+        Claims claims = Jwts.claims().setSubject(authentication.getName());
 
-    public Token receiveAccessToken(String userId) {
-        String token = createAccessToken(userId, accessTokenValidTime);
-        return new Token(token, accessTokenValidTime);
+        Date now = new Date();
+        Date expiresIn = new Date(now.getTime() + refreshTokenValidTime);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiresIn)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
-    
-    public Token receiveRefreshToken(String userId) { // 어떤 행동을 하면 매번 토큰 갱신
-        String token = createRefreshToken(userId, refreshTokenValidTime);
-        return new Token(token, refreshTokenValidTime);
+
+    public Authentication getAuthenticationByAccessToken(String access_token) {
+        String userPrincipal = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(access_token).getBody().getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userPrincipal);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public Authentication getAuthenticationByRefreshToken(String refresh_token) {
+        String userPrincipal = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(refresh_token).getBody().getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userPrincipal);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public String resolveToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader(AUTHORITIES_KEY);
+        if (bearerToken != null && bearerToken.startsWith(BEARER_TYPE)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public String getPayload(String token) {
-        try {
-            return Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getSubject();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims().getSubject();
-        } catch (AuthenticationException e) {
+        String[] tokenParts = token.split("\\.");
+        if (tokenParts.length == 3) {
+            String encodedPayload = tokenParts[1];
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(encodedPayload);
+            return new String(decodedBytes);
+        } else {
             throw new AuthenticationException(INVALID_TOKEN);
         }
     }
 
-    public boolean validateToken(String token) {
-        try {
-            Jws<Claims> claimsJws = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            log.warn("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.warn("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.warn("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
+    public String getPayloadSub(String token) { // payload 에 sub : userId 값 추출
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    private Claims parseClaims(String accessToken) {
-
+    public Boolean validateAccessToken(String token) {
         try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody();
-        } catch (AuthenticationException e) {
-            throw new AuthenticationException(USER_NOT_FOUND);
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            throw new AuthenticationException(INVALID_TOKEN);
+        }
+    }
+
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (JwtException e) {
+            throw new AuthenticationException(INVALID_TOKEN);
         }
     }
 }

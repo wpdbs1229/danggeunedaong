@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/pet")
 public class PetController {
     private final PetService petService;
 
