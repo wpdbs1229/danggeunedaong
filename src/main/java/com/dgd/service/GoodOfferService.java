@@ -6,11 +6,9 @@ import com.dgd.exception.ApplicationException;
 import com.dgd.model.dto.FileDetail;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.entity.Good;
+import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.entity.User;
-import com.dgd.model.repo.AmazonS3ResourceStorage;
-import com.dgd.model.repo.GoodRepository;
-import com.dgd.model.repo.SharingApplicationRepository;
-import com.dgd.model.repo.UserRepository;
+import com.dgd.model.repo.*;
 import com.dgd.model.type.Status;
 import com.dgd.util.MultipartUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +24,7 @@ import java.util.List;
 public class GoodOfferService {
 
     private final GoodRepository goodRepository;
+    private final GoodViewCountRepository goodViewCountRepository;
     private final UserRepository userRepository;
     private final SharingApplicationRepository sharingApplicationRepository;
     private final AmazonS3ResourceStorage amazonS3ResourceStorage;
@@ -39,6 +38,7 @@ public class GoodOfferService {
     public GoodDto.Response readPerOneGood(Long goodId){
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(()-> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+
 
         return good.toResponseDto(good.getUser());
     }
@@ -62,8 +62,8 @@ public class GoodOfferService {
             goodImages.add(amazonS3Client.getUrl("dgd-image-storage",path).toString());
         }
 
-        Long viewCnt = 0L;
-        goodRepository.save(form.toEntity(user,viewCnt, Status.SHARING, goodImages));
+        GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
+        goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
     }
 
     /**

@@ -52,8 +52,8 @@ public class Good extends Base {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> goodImageList;
 
-    @Column(nullable = false)
-    private Long viewCnt;
+    @OneToOne(orphanRemoval = true)
+    private GoodViewCount goodViewCount;
 
 
     public void update(GoodDto.UpdateRequest form){
@@ -85,7 +85,7 @@ public class Good extends Base {
                 .description(this.description)
                 .location(etcFeat.getAddress(user.getLocation()))
                 .status(this.status)
-                .viewCnt(this.viewCnt)
+                .viewCnt(this.goodViewCount.getViewCount())
                 .goodImageList(this.goodImageList)
                 .updatedAt(this.getUpdatedAt())
                 .build();
