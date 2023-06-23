@@ -1,6 +1,7 @@
 package com.dgd.controller;
 
 import com.dgd.model.dto.GoodDto;
+import com.dgd.model.dto.MatchUserDto;
 import com.dgd.service.GoodOfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -84,4 +85,8 @@ public class GoodOfferController {
     }
 
 
+    @GetMapping("/match") // 조회하는 유저가 offer 인지, taker 인지
+    public void matchUser(@RequestBody @Valid MatchUserDto matchUserDto) {
+        goodOfferService.matchUser(matchUserDto);
+    }
 }

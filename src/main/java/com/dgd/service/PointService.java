@@ -21,8 +21,9 @@ public class PointService {
     @Value("${map.key}")
     private String apiKey;
     private final String EPSG = "epsg:4326";
+    private final SearchType searchType = SearchType.ROAD;
 
-    public Point getMapString(SearchType searchType, String searchAddr){
+    public Point getMapString(String searchAddr){
         StringBuilder sb = new StringBuilder("https://api.vworld.kr/req/address");
         sb.append("?service=address");
         sb.append("&request=getCoord");

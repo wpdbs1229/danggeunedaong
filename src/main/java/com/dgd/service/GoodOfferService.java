@@ -5,12 +5,12 @@ import com.dgd.exception.ApplicationErrorCode;
 import com.dgd.exception.ApplicationException;
 import com.dgd.model.dto.FileDetail;
 import com.dgd.model.dto.GoodDto;
+import com.dgd.model.dto.MatchUserDto;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.*;
 import com.dgd.model.type.Status;
-import com.dgd.util.MultipartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -121,5 +122,10 @@ public class GoodOfferService {
 
         good.updateStatus(good.getStatus());
         goodRepository.save(good);
+    }
+
+    public boolean matchUser(MatchUserDto matchUserDto) {
+        Optional<User> user = goodRepository.findUserById(matchUserDto.getGoodId());
+        return matchUserDto.getUserId().equals(user.get().getUserId());
     }
 }

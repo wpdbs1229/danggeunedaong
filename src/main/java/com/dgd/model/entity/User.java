@@ -1,11 +1,12 @@
 package com.dgd.model.entity;
 
 import javax.persistence.*;
+import com.dgd.model.dto.GoodDto;
+import com.dgd.model.dto.UpdateUserDto;
 import com.dgd.model.type.Role;
 import com.dgd.model.type.SocialType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -27,8 +28,8 @@ public class User {
     @NotBlank
     private String password;
     private String location; // DB 저장용 지역 이름
-    private Double latitude; // 위도
-    private Double longitude; // 경도
+    private double latitude; // 위도
+    private double longitude; // 경도
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userId", orphanRemoval = true)
     private List<Pet> petList;
@@ -58,5 +59,15 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Good> goods;
+
+    public void update(UpdateUserDto dto){
+        this.location = dto.getLocation();
+        this.nickName = dto.getNickName();
+    }
+
+    public void setLatAndLon (double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
 }
