@@ -28,6 +28,10 @@ public class Pet {
     private PetGender petGender;
     @Enumerated(EnumType.STRING)
     private PetSize petSize;
+
     @Column(nullable = false)
-    private Long userId; // User user ? / Long userId ? One To One ?
+    private Long userId;
+
+    private String petImage;
+
 }

@@ -6,9 +6,11 @@ import com.dgd.model.dto.UserSignInDto;
 import com.dgd.model.dto.UserSignUpDto;
 import com.dgd.model.entity.User;
 import com.dgd.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -20,9 +22,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody @Valid UserSignUpDto dto) {
+    public ResponseEntity<User> signUp(@RequestPart @Valid UserSignUpDto dto,
+                                       @RequestPart(required = false) MultipartFile multipartFile) {
 
-        return ResponseEntity.ok(userService.signUp(dto));
+        return ResponseEntity.ok(userService.signUp(dto, multipartFile));
     }
 
     @PostMapping("/signin")
@@ -31,8 +34,9 @@ public class UserController {
     }
 
     @PatchMapping("/change")
-    public void updateSocialUser (@RequestBody @Valid UpdateUserDto updateUserDto) {
-        userService.updateUser(updateUserDto);
+    public void updateSocialUser (@RequestPart @Valid UpdateUserDto updateUserDto,
+                                  @RequestPart(required = false) MultipartFile multipartFile) {
+        userService.updateUser(updateUserDto,multipartFile);
     }
 
     /**

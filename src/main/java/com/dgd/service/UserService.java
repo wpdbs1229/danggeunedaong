@@ -9,6 +9,7 @@ import com.dgd.model.dto.UserSignUpDto;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.UserRepository;
 import com.dgd.config.JwtTokenProvider;
+import com.dgd.util.MultipartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +29,9 @@ import static com.dgd.exception.message.AuthErrorMessage.*;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
+
+    private static final String DEFAULT =  "https://dgd-image-storage.s3.ap-northeast-2.amazonaws.com/images/default.png";
+
     private final UserRepository userRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final PasswordEncoder passwordEncoder;
@@ -34,11 +39,13 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final CookieProvider cookieProvider;
     private final PointService pointService;
-
+    private final S3Service s3Service;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
 
-    public User signUp (UserSignUpDto signUpDto) {
+    public User signUp (UserSignUpDto signUpDto, MultipartFile multipartFile) {
+        String profileUrl = "";
+
         if (userRepository.findByUserId(signUpDto.getUserId()).isPresent()) {
             throw new AuthenticationException(ALREADY_REGISTERED);
         }
@@ -48,11 +55,17 @@ public class UserService {
         }
         Point point = pointService.getMapString(signUpDto.getLocation());
 
-
+        if (multipartFile == null){
+            //TODO
+            profileUrl = DEFAULT;
+        } else {
+            profileUrl = s3Service.uploadImage(multipartFile);
+        }
         User user = User.builder()
                 .nickName(signUpDto.getNickName())
                 .userId(signUpDto.getUserId())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
+                .profileUrl(profileUrl)
                 .location(signUpDto.getLocation())
                 .latitude(point.getLatitude())
                 .longitude(point.getLongitude())
@@ -97,16 +110,18 @@ public class UserService {
         return userNickName;
     }
 
-    public User updateUser(UpdateUserDto updateUserDto) {
+    public User updateUser(UpdateUserDto updateUserDto, MultipartFile multipartFile) {
         Point point = pointService.getMapString(updateUserDto.getLocation());
         double latitude = point.getLatitude();
         double longitude = point.getLongitude();
 
         User user = userRepository.findById(updateUserDto.getId())
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
-
+        if (!DEFAULT.equals(user.getProfileUrl())){
+            s3Service.deleteImage(user);
+        }
         user.setLatAndLon(latitude, longitude);
-        user.update(updateUserDto);
+        user.update(updateUserDto, s3Service.uploadImage(multipartFile));
         user.authorizeUser();
 
        return user;

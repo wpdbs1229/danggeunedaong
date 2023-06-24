@@ -32,8 +32,7 @@ public class GoodOfferService {
     private final GoodViewCountRepository goodViewCountRepository;
     private final UserRepository userRepository;
     private final SharingApplicationRepository sharingApplicationRepository;
-    private final AmazonS3ResourceStorage amazonS3ResourceStorage;
-    private final AmazonS3Client amazonS3Client;
+    private final S3Service s3Service;
 
     /**
      * 상품 상세조회
@@ -58,31 +57,13 @@ public class GoodOfferService {
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
 
-        List<String> goodImages = uploadImage(multipartFiles);
+        List<String> goodImages = s3Service.uploadImage(multipartFiles);
 
         GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
         goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
     }
 
-    /**
-     * S3에 이미지 업로드 및 이미지 객채 경로들 반환
-     * @param multipartFiles
-     * @return
-     */
-    private List<String> uploadImage(List<MultipartFile> multipartFiles) {
-        List<String> goodImages = new ArrayList<>();
 
-        for (MultipartFile multipartFile : multipartFiles){
-            FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
-            String path = "images/"+fileDetail.getId()+"."+fileDetail.getFormat();
-            amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
-
-            goodImages.add(String.valueOf(amazonS3Client.getUrl(bucketName,path)));
-
-        }
-
-        return goodImages;
-    }
 
     /**
      * 등록한 상품조회
@@ -113,30 +94,14 @@ public class GoodOfferService {
         Good good = goodRepository.findById(form.getGoodId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
-        deleteImage(good);
-        List<String> goodImages = uploadImage(multipartFiles);
+        s3Service.deleteImage(good);
+        List<String> goodImages = s3Service.uploadImage(multipartFiles);
         good.update(form,goodImages);
 
         goodRepository.save(good);
     }
 
-    /**
-     * S3 이미지 삭제
-     * @param good
-     */
-    private void deleteImage(Good good) {
-        List<String> goodImageList = good.getGoodImageList();
-        for( String goodImage : goodImageList){
-            String keyName = goodImage.substring(58);
-            boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
-            if (isObjectExist){
-                amazonS3Client.deleteObject(bucketName,keyName);
-            } else{
-                throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER);
-            }
 
-        }
-    }
 
     /**
      * 등록한 상품 삭제
@@ -147,7 +112,7 @@ public class GoodOfferService {
         Good good = goodRepository.findById(goodId)
                 .orElseThrow( () -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
-        deleteImage(good);
+        s3Service.deleteImage(good);
         goodRepository.deleteById(goodId);
     }
 
