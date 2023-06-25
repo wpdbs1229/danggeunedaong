@@ -1,4 +1,4 @@
-package com.dgd.exception;
+package com.dgd.exception.error;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -88,7 +88,7 @@ public class UserService {
                 refreshTokenValidTime,
                 TimeUnit.MILLISECONDS);
 
-        return jwtTokenProvider.getPayload(accessToken);
+        return accessToken;
     }
 
     public String findSocialUserNickName(String socialId) { // 소셜 로그인한 사람의 소셜 이메일로 DB에서 유저의 닉네임을 검색
