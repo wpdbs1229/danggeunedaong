@@ -1,4 +1,4 @@
-package com.dgd.exception;
+package com.dgd.exception.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
