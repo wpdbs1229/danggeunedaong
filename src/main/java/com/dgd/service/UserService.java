@@ -88,7 +88,7 @@ public class UserService {
                 refreshTokenValidTime,
                 TimeUnit.MILLISECONDS);
 
-        return jwtTokenProvider.getPayload(accessToken);
+        return accessToken;
     }
 
     public String findSocialUserNickName(String socialId) { // 소셜 로그인한 사람의 소셜 이메일로 DB에서 유저의 닉네임을 검색
@@ -104,6 +104,9 @@ public class UserService {
 
         User user = userRepository.findById(updateUserDto.getId())
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+        if (userRepository.existByNickName(updateUserDto.getNickName())) {
+            throw new AuthenticationException(DUPLICATED_NICKNAME);
+        }
 
         user.setLatAndLon(latitude, longitude);
         user.update(updateUserDto);

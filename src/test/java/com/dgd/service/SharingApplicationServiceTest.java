@@ -2,6 +2,7 @@ package com.dgd.service;
 
 import com.dgd.model.dto.SharingApplicationDto;
 import com.dgd.model.entity.Good;
+import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.entity.SharingApplication;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.GoodRepository;
@@ -42,13 +43,18 @@ class SharingApplicationServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private ChatRoomService chatRoomService;
+
+
+
     @InjectMocks
     private SharingApplicationService sharingApplicationService;
 
     @BeforeEach
     public void setUpTest(){
         sharingApplicationService = new SharingApplicationService(
-                sharingApplicationRepository,userRepository,goodRepository
+                sharingApplicationRepository,userRepository,goodRepository,chatRoomService
         );
     }
     @Test
@@ -90,7 +96,7 @@ class SharingApplicationServiceTest {
                     .longitude(123.5342)
                     .status(Status.SHARING)
                     .goodImageList(list)
-                    .viewCnt(1L)
+                    .goodViewCount(GoodViewCount.builder().goodId(1L).viewCount(1L).build())
                     .build();
 
 

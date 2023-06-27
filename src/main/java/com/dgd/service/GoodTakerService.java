@@ -1,10 +1,9 @@
 package com.dgd.service;
 
-import com.dgd.exception.ApplicationErrorCode;
-import com.dgd.exception.ApplicationException;
+import com.dgd.exception.message.ApplicationErrorCode;
+import com.dgd.exception.error.ApplicationException;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.entity.Good;
-import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.repo.GoodQueryRepository;
 import com.dgd.model.repo.GoodRepository;
 import com.dgd.model.repo.GoodViewCountRepository;

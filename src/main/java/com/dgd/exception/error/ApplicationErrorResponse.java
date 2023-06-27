@@ -1,5 +1,6 @@
-package com.dgd.exception;
+package com.dgd.exception.error;
 
+import com.dgd.exception.message.ApplicationErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
