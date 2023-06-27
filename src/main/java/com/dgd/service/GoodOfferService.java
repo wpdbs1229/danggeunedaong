@@ -12,6 +12,7 @@ import com.dgd.model.entity.User;
 import com.dgd.model.repo.*;
 import com.dgd.model.type.Status;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +25,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GoodOfferService {
 
+    @Value("${spring.s3.bucket}")
+    private String bucketName;
+
     private final GoodRepository goodRepository;
     private final GoodViewCountRepository goodViewCountRepository;
     private final UserRepository userRepository;
     private final SharingApplicationRepository sharingApplicationRepository;
-    private final AmazonS3ResourceStorage amazonS3ResourceStorage;
-    private final AmazonS3Client amazonS3Client;
+    private final S3Service s3Service;
 
     /**
      * 상품 상세조회
@@ -53,19 +56,14 @@ public class GoodOfferService {
         User user = userRepository.findByUserId(form.getUserId())
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
-        List<String> goodImages = new ArrayList<>();
 
-        for (MultipartFile multipartFile : multipartFiles){
-            FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
-            String path = fileDetail.getId()+"."+fileDetail.getFormat();
-            amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
-
-            goodImages.add(amazonS3Client.getUrl("dgd-image-storage",path).toString());
-        }
+        List<String> goodImages = s3Service.uploadImage(multipartFiles);
 
         GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
         goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
     }
+
+
 
     /**
      * 등록한 상품조회
@@ -92,14 +90,18 @@ public class GoodOfferService {
      * @param form
      */
     @Transactional
-    public void updateGoods(GoodDto.UpdateRequest form){
+    public void updateGoods(GoodDto.UpdateRequest form, List<MultipartFile> multipartFiles){
         Good good = goodRepository.findById(form.getGoodId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
-        good.update(form);
+        s3Service.deleteImage(good);
+        List<String> goodImages = s3Service.uploadImage(multipartFiles);
+        good.update(form,goodImages);
 
         goodRepository.save(good);
     }
+
+
 
     /**
      * 등록한 상품 삭제
@@ -107,15 +109,17 @@ public class GoodOfferService {
      */
     @Transactional
     public void deleteGood(Long goodId){
-        boolean exists = goodRepository.existsById(goodId);
+        Good good = goodRepository.findById(goodId)
+                .orElseThrow( () -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
-        if (!exists){
-            throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD);
-        }
-
+        s3Service.deleteImage(good);
         goodRepository.deleteById(goodId);
     }
 
+    /**
+     * 나눔 상태 변경
+     * @param goodId
+     */
     public void updateStatus(Long goodId) {
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));

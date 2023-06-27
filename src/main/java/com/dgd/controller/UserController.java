@@ -6,12 +6,15 @@ import com.dgd.model.dto.UserSignInDto;
 import com.dgd.model.dto.UserSignUpDto;
 import com.dgd.model.entity.User;
 import com.dgd.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/user")
@@ -31,8 +34,9 @@ public class UserController {
     }
 
     @PatchMapping("/change")
-    public void updateSocialUser (@RequestBody @Valid UpdateUserDto updateUserDto) {
-        userService.updateUser(updateUserDto);
+    public void updateSocialUser (@RequestPart(value = "request") @Valid UpdateUserDto updateUserDto,
+                                  @RequestPart(required = false, value = "file") MultipartFile multipartFile) {
+        userService.updateUser(updateUserDto,multipartFile);
     }
 
     /**
@@ -46,4 +50,5 @@ public class UserController {
 
         return null;
     }
+
 }

@@ -60,9 +60,10 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Good> goods;
 
-    public void update(UpdateUserDto dto){
+    public void update(UpdateUserDto dto, String profileUrl){
         this.location = dto.getLocation();
         this.nickName = dto.getNickName();
+        this.profileUrl = profileUrl;
     }
 
     public void setLatAndLon (double latitude, double longitude) {

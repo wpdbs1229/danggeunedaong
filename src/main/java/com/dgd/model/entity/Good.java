@@ -56,18 +56,18 @@ public class Good extends Base {
     private GoodViewCount goodViewCount;
 
 
-    public void update(GoodDto.UpdateRequest form){
+    public void update(GoodDto.UpdateRequest form, List<String> goodImageList){
         this.mainCategory = form.getMainCategory();
         this.subCategory = form.getSubCategory();
         this.title = form.getTitle();
         this.description = form.getDescription();
         this.status = form.getStatus();
-        this.goodImageList = form.getGoodImageList();
+        this.goodImageList = goodImageList;
     }
 
     public void updateStatus(Status status){
         if (Status.SHARING.equals(status)){
-            this.status = Status.COMPLETED;
+            this.status = Status.COMPLETE;
         } else {
             this.status = Status.SHARING;
         }

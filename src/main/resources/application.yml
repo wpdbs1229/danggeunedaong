@@ -5,10 +5,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
 
   mvc:
