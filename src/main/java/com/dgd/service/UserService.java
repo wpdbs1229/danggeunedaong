@@ -9,7 +9,6 @@ import com.dgd.model.dto.UserSignUpDto;
 import com.dgd.model.entity.User;
 import com.dgd.model.repo.UserRepository;
 import com.dgd.config.JwtTokenProvider;
-import com.dgd.util.MultipartUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,10 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.TimeUnit;
-
 import static com.dgd.exception.message.AuthErrorMessage.*;
 
 @Service
@@ -43,7 +40,7 @@ public class UserService {
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
 
-    public User signUp (UserSignUpDto signUpDto, MultipartFile multipartFile) {
+    public User signUp (UserSignUpDto signUpDto) {
         String profileUrl = "";
 
         if (userRepository.findByUserId(signUpDto.getUserId()).isPresent()) {
@@ -55,12 +52,10 @@ public class UserService {
         }
         Point point = pointService.getMapString(signUpDto.getLocation());
 
-        if (multipartFile == null){
-            //TODO
-            profileUrl = DEFAULT;
-        } else {
-            profileUrl = s3Service.uploadImage(multipartFile);
-        }
+
+        //TODO
+        profileUrl = DEFAULT;
+
         User user = User.builder()
                 .nickName(signUpDto.getNickName())
                 .userId(signUpDto.getUserId())

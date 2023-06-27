@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -22,10 +23,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestPart @Valid UserSignUpDto dto,
-                                       @RequestPart(required = false) MultipartFile multipartFile) {
+    public ResponseEntity<User> signUp(@RequestBody @Valid UserSignUpDto dto) {
 
-        return ResponseEntity.ok(userService.signUp(dto, multipartFile));
+        return ResponseEntity.ok(userService.signUp(dto));
     }
 
     @PostMapping("/signin")
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PatchMapping("/change")
-    public void updateSocialUser (@RequestPart @Valid UpdateUserDto updateUserDto,
-                                  @RequestPart(required = false) MultipartFile multipartFile) {
+    public void updateSocialUser (@RequestPart(value = "request") @Valid UpdateUserDto updateUserDto,
+                                  @RequestPart(required = false, value = "file") MultipartFile multipartFile) {
         userService.updateUser(updateUserDto,multipartFile);
     }
 
@@ -50,4 +50,5 @@ public class UserController {
 
         return null;
     }
+
 }
