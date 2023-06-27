@@ -1,8 +1,8 @@
 package com.dgd.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.dgd.exception.ApplicationErrorCode;
-import com.dgd.exception.ApplicationException;
+import com.dgd.exception.message.ApplicationErrorCode;
+import com.dgd.exception.error.ApplicationException;
 import com.dgd.model.dto.FileDetail;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.dto.MatchUserDto;

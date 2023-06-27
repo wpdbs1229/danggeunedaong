@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -47,4 +48,5 @@ public class UserController {
     public ResponseEntity<String> getAccessToken(String accessToken) {
        return ResponseEntity.ok(userService.getAccessTokenByUser(accessToken));
     }
+
 }
