@@ -18,7 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import static com.dgd.exception.message.AuthErrorMessage.*;
 
@@ -52,6 +54,7 @@ public class UserService {
         }
         Point point = pointService.getMapString(signUpDto.getLocation());
 
+        profileUrl = DEFAULT;
 
         //TODO
         profileUrl = DEFAULT;
@@ -81,10 +84,7 @@ public class UserService {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInDto.getUserId(), signInDto.getPassword()));
-        /**
-         * TODO
-         * 프로필 URL
-         */
+
 
         String accessToken = jwtTokenProvider.generateAccessToken(authentication);
         String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
@@ -96,14 +96,9 @@ public class UserService {
                 refreshTokenValidTime,
                 TimeUnit.MILLISECONDS);
 
-        return accessToken;
+        return user.getRoleKey() + accessToken;
     }
 
-    public String findSocialUserNickName(String socialId) { // 소셜 로그인한 사람의 소셜 이메일로 DB에서 유저의 닉네임을 검색
-        String userNickName = userRepository.findBySocialId(socialId)
-                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND)).getNickName();
-        return userNickName;
-    }
 
     public User updateUser(UpdateUserDto updateUserDto, MultipartFile multipartFile) {
         Point point = pointService.getMapString(updateUserDto.getLocation());
@@ -112,12 +107,11 @@ public class UserService {
 
         User user = userRepository.findById(updateUserDto.getId())
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
-
+      
         if (!DEFAULT.equals(user.getProfileUrl())){
             s3Service.deleteImage(user);
         }
-      
-        if (userRepository.existByNickName(updateUserDto.getNickName())) {
+        if (userRepository.findByNickName(updateUserDto.getNickName()).isPresent()) {
             throw new AuthenticationException(DUPLICATED_NICKNAME);
         }
 
@@ -125,8 +119,20 @@ public class UserService {
         user.update(updateUserDto, s3Service.uploadImage(multipartFile));
         user.authorizeUser();
 
+
        return user;
     }
 
+    public String getAccessTokenByUser(String accessToken) {
+        String userId = jwtTokenProvider.getPayloadSub(accessToken);
+        Optional<User> user = userRepository.findByUserId(userId);
+        String password = user.get().getPassword();
+        if(!redisTemplate.opsForValue().get(userId).isEmpty()) {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userId, password));
 
+            return user.get().getRoleKey() + jwtTokenProvider.generateAccessToken(authentication);
+        }
+        throw new AuthenticationException(INVALID_TOKEN);
+    }
 }

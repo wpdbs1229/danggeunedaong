@@ -40,15 +40,13 @@ public class UserController {
     }
 
     /**
-     * TODO
      * Refresh Token 확인 후 유효한 토큰이면
      * Access Token 재발급 해주는 로직
      * *** Refresh Token 은 재발급 안됨 ! ( 보안 > 편의 ) ***
      */
     @GetMapping("/token")
-    public ResponseEntity<?> getAccessToken() {
-
-        return null;
+    public ResponseEntity<String> getAccessToken(String accessToken) {
+       return ResponseEntity.ok(userService.getAccessTokenByUser(accessToken));
     }
 
 }
