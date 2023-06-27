@@ -58,7 +58,6 @@ public class GoodDto {
         private String title;
         private String description;
         private Status status;
-        private List<String> goodImageList;
 
     }
 

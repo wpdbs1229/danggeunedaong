@@ -1,7 +1,5 @@
 package com.dgd.service.oauth;
 
-import com.dgd.config.CookieProvider;
-import com.dgd.config.JwtTokenProvider;
 import com.dgd.exception.error.AuthenticationException;
 import com.dgd.model.dto.UserSignInDto;
 import com.dgd.model.entity.User;
@@ -12,11 +10,6 @@ import com.dgd.service.UserService;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,24 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoOauthService {
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final CookieProvider cookieProvider;
-    private final RedisTemplate<String, String> redisTemplate;
     private final UserService userService;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.client-authentication-method}")
     private final String kakaoClientAuthenticationMethod = "POST";
 
     public String createKakaoUser(String token, HttpServletResponse response) throws AuthenticationException {
@@ -81,34 +66,20 @@ public class KakaoOauthService {
                 nickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
             }
 
-            System.out.println("id : " + id);
-            System.out.println("nickName : " + nickName);
-            /**
-             * TODO
-             * 프로필URL 추가
-             */
-
             if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isEmpty()) {
-                saveUser(String.valueOf(id), nickName);
+                User user = saveUser(String.valueOf(id), nickName);
 
+                UserSignInDto userSignInDto = UserSignInDto.builder()
+                        .userId(String.valueOf(id))
+                        .password(user.getPassword())
+                        .build();
 
-                Authentication authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(id, passwordEncoder.encode(id.toString())));
-
-                String accessToken = jwtTokenProvider.generateAccessToken(authentication);
-                String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+                String accessToken = userService.signIn(userSignInDto, response);
 
                 br.close();
 
-                cookieProvider.setRefreshTokenCookie(refreshToken, response);
+                return user.getRoleKey() + accessToken;
 
-                redisTemplate.opsForValue().set(
-                        authentication.getName(),
-                        refreshToken,
-                        refreshTokenValidTime,
-                        TimeUnit.MILLISECONDS);
-
-                return jwtTokenProvider.getPayload(accessToken);
             } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()){
                 UserSignInDto dto = UserSignInDto.builder()
                                                 .userId(String.valueOf(id))
@@ -125,7 +96,7 @@ public class KakaoOauthService {
         return null;
     }
 
-    public void saveUser(String id, String nickName) {
+    public User saveUser(String id, String nickName) {
         User user = User.builder()
                 .userId(id)
                 .password(passwordEncoder.encode(id))
@@ -133,6 +104,6 @@ public class KakaoOauthService {
                 .socialType(SocialType.KAKAO)
                 .role(Role.GUEST)
                 .build();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }

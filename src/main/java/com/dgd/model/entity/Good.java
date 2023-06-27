@@ -67,7 +67,7 @@ public class Good extends Base {
 
     public void updateStatus(Status status){
         if (Status.SHARING.equals(status)){
-            this.status = Status.COMPLETED;
+            this.status = Status.COMPLETE;
         } else {
             this.status = Status.SHARING;
         }

@@ -6,6 +6,7 @@ import com.dgd.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -15,8 +16,9 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping("/add")
-    public ResponseEntity<Pet> addPet(@RequestBody AddPetDto addPetDto) {
-        return ResponseEntity.ok(petService.addPet(addPetDto));
+    public ResponseEntity<Pet> addPet(@RequestPart AddPetDto addPetDto,
+                                      @RequestPart(required = false) MultipartFile multipartFile) {
+        return ResponseEntity.ok(petService.addPet(addPetDto, multipartFile));
     }
 
 }

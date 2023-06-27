@@ -110,7 +110,6 @@ public class JwtTokenProvider {
         }
     }
 
-
     public boolean validateRefreshToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);

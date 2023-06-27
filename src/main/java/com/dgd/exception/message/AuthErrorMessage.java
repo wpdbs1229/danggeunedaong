@@ -11,7 +11,7 @@ public enum AuthErrorMessage {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "인가되지 않은 토큰입니다."),
     ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다."),
     DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
-    UNAUTHORIZED_REQUEST(HttpStatus.BAD_REQUEST, "권한이 없습니다.")
+    UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "권한이 없습니다.")
     ;
 
     private final HttpStatus status;
