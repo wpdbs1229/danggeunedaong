@@ -27,8 +27,6 @@ public class KakaoOauthService {
     private final UserService userService;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
-    private final String kakaoClientAuthenticationMethod = "POST";
-
     public String createKakaoUser(String token, HttpServletResponse response) throws AuthenticationException {
 
         String reqURL = "https://kapi.kakao.com/v2/user/me";
@@ -37,7 +35,7 @@ public class KakaoOauthService {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod(kakaoClientAuthenticationMethod);
+            conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 
