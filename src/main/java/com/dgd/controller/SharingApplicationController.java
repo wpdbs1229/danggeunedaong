@@ -1,6 +1,7 @@
 package com.dgd.controller;
 
 import com.dgd.model.dto.SharingApplicationDto;
+import com.dgd.model.entity.Good;
 import com.dgd.service.SharingApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,15 @@ public class SharingApplicationController {
     public ResponseEntity<?> cancelSharingApplication(@RequestParam Long sharingApplicationId){
         sharingApplicationService.cancelSharingApplication(sharingApplicationId);
         return ResponseEntity.ok("신청취소가 완료되었습니다.");
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> searchMyApplyList(@RequestParam @Valid String userId) {
+        return ResponseEntity.ok(sharingApplicationService.searchMyapplyList(userId));
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<Good> searchGoodByApply(@RequestParam @Valid Long sharingApplicationId) {
+        return ResponseEntity.ok(sharingApplicationService.searchGoodByApply(sharingApplicationId));
     }
 }

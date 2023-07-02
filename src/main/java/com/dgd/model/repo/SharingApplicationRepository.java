@@ -16,5 +16,9 @@ public interface SharingApplicationRepository extends JpaRepository<SharingAppli
     Integer countByGood(Good good);
     boolean existsByUserAndGood(User user, Good good);
 
+    List<SharingApplication> findAllByUser(User user);
+
+    Optional<Good> findGoodById(Long id);
+
     Optional<SharingApplication> findGoodById(Long id);
 }

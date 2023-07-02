@@ -1,7 +1,8 @@
 package com.dgd.service;
 
-import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.exception.error.ApplicationException;
+import com.dgd.exception.error.AuthenticationException;
+import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.model.dto.CreateChatRoomDto;
 import com.dgd.model.dto.SharingApplicationDto;
 import com.dgd.model.entity.Good;
@@ -16,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dgd.exception.ApplicationErrorCode.NOT_REGISTERED_GOOD;
+import static com.dgd.exception.message.AuthErrorMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +40,7 @@ public class SharingApplicationService {
         EtcFeat dis = new EtcFeat();
 
         Good good = goodRepository.findById(form.getGoodId())
-                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+                .orElseThrow(() -> new ApplicationException(NOT_REGISTERED_GOOD));
         User user = userRepository.findByUserId(form.getUserId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
@@ -67,7 +71,7 @@ public class SharingApplicationService {
     public List<SharingApplicationDto.Response> readSharingApplicationStatus(Long goodId) {
 
         Good good = goodRepository.findById(goodId)
-                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+                .orElseThrow(() -> new ApplicationException(NOT_REGISTERED_GOOD));
         List<SharingApplication> applications = sharingApplicationRepository.findAllByGood(good);
 
 
@@ -103,4 +107,16 @@ public class SharingApplicationService {
         sharingApplicationRepository.deleteById(sharingApplicationId);
     }
 
+    public List<SharingApplication> searchMyapplyList(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+
+        return sharingApplicationRepository.findAllByUser(user);
+    }
+
+    public Good searchGoodByApply(Long sharingApplicationId) {
+
+        return sharingApplicationRepository.findGoodById(sharingApplicationId)
+                .orElseThrow(() -> new ApplicationException(NOT_REGISTERED_GOOD));
+    }
 }

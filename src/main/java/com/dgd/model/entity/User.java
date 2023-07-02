@@ -38,7 +38,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // KAKAO, NAVER
     private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
-    private String token;
     public void authorizeUser() { // 유저 권한 설정
         this.role = Role.USER;
     }
