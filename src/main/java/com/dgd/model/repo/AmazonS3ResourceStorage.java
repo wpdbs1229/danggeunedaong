@@ -23,7 +23,7 @@ public class AmazonS3ResourceStorage {
     private final AmazonS3Client amazonS3Client;
 
     public void goodImageStore(String fullPath, MultipartFile multipartFile) {
-        String path = MultipartUtil.getLocalHomeDirectory()+"\\"+fullPath;
+        String path = MultipartUtil.getLocalHomeDirectory()+File.separator+fullPath; // mac = /
         File file = new File(path);
 
         System.out.println(path);

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dgd.exception.message.ApplicationErrorCode.NOT_REGISTERED_APPLICATION;
 import static com.dgd.exception.message.ApplicationErrorCode.NOT_REGISTERED_GOOD;
 import static com.dgd.exception.message.AuthErrorMessage.*;
 
@@ -118,7 +119,10 @@ public class SharingApplicationService {
 
     public Good searchGoodByApply(Long sharingApplicationId) {
 
-        return sharingApplicationRepository.findGoodById(sharingApplicationId)
+        SharingApplication sharingApplication =  sharingApplicationRepository.findById(sharingApplicationId)
+                .orElseThrow(() -> new ApplicationException(NOT_REGISTERED_APPLICATION));
+
+        return goodRepository.findById(sharingApplication.getGood().getId())
                 .orElseThrow(() -> new ApplicationException(NOT_REGISTERED_GOOD));
     }
 }

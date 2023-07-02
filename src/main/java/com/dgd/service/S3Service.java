@@ -61,7 +61,6 @@ public class S3Service {
             amazonS3ResourceStorage.goodImageStore(path, multipartFile);
             String dbpath = "good/"+fileDetail.getId()+"."+fileDetail.getFormat();
             goodImages.add(String.valueOf(amazonS3Client.getUrl(bucketName,dbpath)));
-
         }
 
         return goodImages;

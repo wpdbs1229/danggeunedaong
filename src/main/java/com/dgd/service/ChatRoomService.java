@@ -1,12 +1,16 @@
 package com.dgd.service;
 
+import com.dgd.exception.error.ApplicationException;
 import com.dgd.exception.error.AuthenticationException;
 import com.dgd.exception.error.ChatException;
+import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.model.dto.CreateChatRoomDto;
 import com.dgd.model.dto.EnterChatRoomDto;
 import com.dgd.model.entity.ChatRoom;
 import com.dgd.model.entity.Good;
+import com.dgd.model.entity.SharingApplication;
 import com.dgd.model.repo.ChatRoomRepository;
+import com.dgd.model.repo.GoodRepository;
 import com.dgd.model.repo.SharingApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,11 +23,14 @@ import static com.dgd.exception.message.ChatErrorMessage.*;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final SharingApplicationRepository sharingApplicationRepository;
+    private final GoodRepository goodRepository;
 
     public ChatRoom createChatRoom(CreateChatRoomDto createChatRoomDto) {
-        Good good = sharingApplicationRepository
-                .findGoodById(createChatRoomDto.getSharingApplicationId())
+        SharingApplication sharingApplication = sharingApplicationRepository
+                .findById(createChatRoomDto.getSharingApplicationId())
                 .orElseThrow(() -> new ChatException(NOT_ACTIVATED_APPLICATION));
+        Good good = goodRepository.findById(sharingApplication.getGood().getId())
+                .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
         String offerId = good.getUser().getUserId();
 
