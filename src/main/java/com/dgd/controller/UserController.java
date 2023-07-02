@@ -44,7 +44,12 @@ public class UserController {
      * *** Refresh Token 은 재발급 안됨 ! ( 보안 > 편의 ) ***
      */
     @GetMapping("/token")
-    public ResponseEntity<String> getAccessToken(String accessToken) {
+    public ResponseEntity<String> getAccessToken(@RequestParam @Valid String accessToken) {
        return ResponseEntity.ok(userService.getAccessTokenByUser(accessToken));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<User> getUserInfo(@RequestParam @Valid String userId) {
+        return ResponseEntity.ok(userService.getUserInfo(userId));
     }
 }

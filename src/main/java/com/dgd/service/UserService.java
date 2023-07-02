@@ -131,4 +131,9 @@ public class UserService {
         }
         throw new AuthenticationException(INVALID_TOKEN);
     }
+
+    public User getUserInfo(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+    }
 }

@@ -6,6 +6,7 @@ import com.dgd.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface SharingApplicationRepository extends JpaRepository<SharingApplication, Long> {
@@ -14,4 +15,8 @@ public interface SharingApplicationRepository extends JpaRepository<SharingAppli
 
     Integer countByGood(Good good);
     boolean existsByUserAndGood(User user, Good good);
+
+    List<SharingApplication> findAllByUser(User user);
+
+    Optional<Good> findGoodById(Long id);
 }
