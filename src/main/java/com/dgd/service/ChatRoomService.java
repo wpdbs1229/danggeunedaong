@@ -23,7 +23,7 @@ public class ChatRoomService {
     public ChatRoom createChatRoom(CreateChatRoomDto createChatRoomDto) {
         Good good = sharingApplicationRepository
                 .findGoodById(createChatRoomDto.getSharingApplicationId())
-                .orElseThrow(() -> new ChatException(NOT_ACTIVATED_APPLICATION)).getGood();
+                .orElseThrow(() -> new ChatException(NOT_ACTIVATED_APPLICATION));
 
         String offerId = good.getUser().getUserId();
 

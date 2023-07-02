@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dgd.exception.ApplicationErrorCode.NOT_REGISTERED_GOOD;
+import static com.dgd.exception.message.ApplicationErrorCode.NOT_REGISTERED_GOOD;
 import static com.dgd.exception.message.AuthErrorMessage.*;
 
 @Service

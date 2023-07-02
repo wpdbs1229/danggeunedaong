@@ -18,7 +18,7 @@ public interface SharingApplicationRepository extends JpaRepository<SharingAppli
 
     List<SharingApplication> findAllByUser(User user);
 
-    Optional<Good> findGoodById(Long id);
+    Optional<Good> findGoodById(Long id); // sharingApplication Id 로 Good 테이블 찾기
 
-    Optional<SharingApplication> findGoodById(Long id);
+    Optional<SharingApplication> findById(Long id);
 }

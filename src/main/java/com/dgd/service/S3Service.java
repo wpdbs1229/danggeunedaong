@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dgd.exception.message.ApplicationErrorCode.*;
+
 @RequiredArgsConstructor
 @Service
 public class S3Service {
@@ -78,9 +80,8 @@ public class S3Service {
             if (isObjectExist){
                 amazonS3Client.deleteObject(bucketName,keyName);
             } else{
-                throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER);
+                throw new ApplicationException(NOT_EXIST_IMAGE);
             }
-
         }
     }
 
@@ -95,7 +96,7 @@ public class S3Service {
         if (isObjectExist){
             amazonS3Client.deleteObject(bucketName,keyName);
         } else{
-            throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER);
+            throw new ApplicationException(NOT_REGISTERED_USER);
         }
 
 
