@@ -30,16 +30,16 @@ public class S3Service {
      * @param multipartFile
      * @return
      */
-    public String uploadImage(MultipartFile multipartFile) {
+    public String uploadUserImage(MultipartFile multipartFile) {
         String petImage = "";
 
 
 
         FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
-        String path = "images/"+fileDetail.getId()+"."+fileDetail.getFormat();
-        amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
-
-        petImage = String.valueOf(amazonS3Client.getUrl(bucketName,path));
+        String path = fileDetail.getId()+"."+fileDetail.getFormat();
+        amazonS3ResourceStorage.userImageStore(fileDetail.getPath(), multipartFile);
+        String dbpath = "user/"+fileDetail.getId()+"."+fileDetail.getFormat();
+        petImage = String.valueOf(amazonS3Client.getUrl(bucketName,dbpath));
 
 
         return petImage;
@@ -50,15 +50,15 @@ public class S3Service {
      * @param multipartFiles
      * @return
      */
-    public List<String> uploadImage(List<MultipartFile> multipartFiles) {
+    public List<String> uploadGoodImage(List<MultipartFile> multipartFiles) {
         List<String> goodImages = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles){
             FileDetail fileDetail = FileDetail.multiPartOf(multipartFile);
-            String path = "images/"+fileDetail.getId()+"."+fileDetail.getFormat();
-            amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
-
-            goodImages.add(String.valueOf(amazonS3Client.getUrl(bucketName,path)));
+            String path = fileDetail.getId()+"."+fileDetail.getFormat();
+            amazonS3ResourceStorage.goodImageStore(path, multipartFile);
+            String dbpath = "good/"+fileDetail.getId()+"."+fileDetail.getFormat();
+            goodImages.add(String.valueOf(amazonS3Client.getUrl(bucketName,dbpath)));
 
         }
 

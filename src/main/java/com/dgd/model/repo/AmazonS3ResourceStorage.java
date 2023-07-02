@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Component
 @RequiredArgsConstructor
@@ -20,15 +22,34 @@ public class AmazonS3ResourceStorage {
     private String bucket;
     private final AmazonS3Client amazonS3Client;
 
-    public void store(String fullPath, MultipartFile multipartFile) {
-        File file = new File(MultipartUtil.getLocalHomeDirectory(), fullPath);
-        System.out.println(MultipartUtil.getLocalHomeDirectory());
+    public void goodImageStore(String fullPath, MultipartFile multipartFile) {
+        String path = MultipartUtil.getLocalHomeDirectory()+"\\"+fullPath;
+        File file = new File(path);
+
+        System.out.println(path);
         try {
             multipartFile.transferTo(file);
-            amazonS3Client.putObject(new PutObjectRequest(bucket, fullPath, file)
+            amazonS3Client.putObject(new PutObjectRequest(bucket, "good/"+fullPath, file)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new IllegalArgumentException("MultiPart -> File 전환 실패 ");
+        } finally {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+    public void userImageStore(String fullPath, MultipartFile multipartFile) {
+        String path = MultipartUtil.getLocalHomeDirectory()+"\\"+fullPath;
+        File file = new File(path);
+
+        System.out.println(path);
+        try {
+            multipartFile.transferTo(file);
+            amazonS3Client.putObject(new PutObjectRequest(bucket, "user/"+fullPath, file)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("MultiPart -> File 전환 실패 ");
         } finally {
             if (file.exists()) {
                 file.delete();

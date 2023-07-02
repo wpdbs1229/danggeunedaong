@@ -78,6 +78,7 @@ public class Good extends Base {
         EtcFeat etcFeat = new EtcFeat();
 
         return GoodDto.Response.builder()
+                .goodId(this.id)
                 .offerNickName(user.getNickName())
                 .mainCategory(this.mainCategory)
                 .subCategory(this.subCategory)
@@ -93,6 +94,7 @@ public class Good extends Base {
 
     public GoodDto.MyResponseList toResponsesDto(Integer sharingApplicationNum){
         return GoodDto.MyResponseList.builder()
+                .goodId(this.id)
                 .title(this.title)
                 .featuredImage(this.goodImageList)
                 .updatedAt(this.getUpdatedAt())
@@ -103,6 +105,7 @@ public class Good extends Base {
 
     public GoodDto.ResponseList toResponsesDto(){
         return  GoodDto.ResponseList.builder()
+                .goodId(this.id)
                 .title(this.title)
                 .location(this.getUser().getLocation())
                 .featuredImages(this.goodImageList)

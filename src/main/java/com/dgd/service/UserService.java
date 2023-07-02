@@ -116,7 +116,7 @@ public class UserService {
         }
 
         user.setLatAndLon(latitude, longitude);
-        user.update(updateUserDto, s3Service.uploadImage(multipartFile));
+        user.update(updateUserDto, s3Service.uploadUserImage(multipartFile));
         user.authorizeUser();
 
 

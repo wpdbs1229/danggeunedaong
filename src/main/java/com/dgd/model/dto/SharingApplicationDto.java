@@ -37,6 +37,7 @@ public class SharingApplicationDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response{
+        private Long sharingId;
         private String userId;
         private String profileUrl;
         private Double distance;

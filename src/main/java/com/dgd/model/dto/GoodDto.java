@@ -66,6 +66,7 @@ public class GoodDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Response{
+        private Long goodId;
         private String offerNickName;
         private MainCategory mainCategory;
         private SubCategory subCategory;
@@ -83,6 +84,7 @@ public class GoodDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MyResponseList {
+        private Long goodId;
         private String title;
         private List<String> featuredImage;
         private LocalDateTime updatedAt;
@@ -95,6 +97,7 @@ public class GoodDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ResponseList {
+        private Long goodId;
         private String title;
         private List<String> featuredImages;
         private String location;
