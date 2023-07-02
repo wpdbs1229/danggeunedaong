@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/user/**", "/oauth/**", "/pet/**").permitAll()
+                .antMatchers("/websocket/**", "/chat/**", "/good/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

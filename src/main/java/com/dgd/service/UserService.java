@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
 import static com.dgd.exception.message.AuthErrorMessage.*;
 
 @Service
@@ -55,6 +54,9 @@ public class UserService {
         }
         Point point = pointService.getMapString(signUpDto.getLocation());
 
+        profileUrl = DEFAULT;
+
+        //TODO
         profileUrl = DEFAULT;
 
         User user = User.builder()
@@ -105,12 +107,14 @@ public class UserService {
 
         User user = userRepository.findById(updateUserDto.getId())
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+      
         if (!DEFAULT.equals(user.getProfileUrl())){
             s3Service.deleteImage(user);
         }
         if (userRepository.findByNickName(updateUserDto.getNickName()).isPresent()) {
             throw new AuthenticationException(DUPLICATED_NICKNAME);
         }
+
         user.setLatAndLon(latitude, longitude);
         user.update(updateUserDto, s3Service.uploadImage(multipartFile));
         user.authorizeUser();

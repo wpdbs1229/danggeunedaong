@@ -1,8 +1,9 @@
 package com.dgd.service;
 
-import com.dgd.exception.ApplicationErrorCode;
-import com.dgd.exception.ApplicationException;
+import com.dgd.exception.error.ApplicationException;
 import com.dgd.exception.error.AuthenticationException;
+import com.dgd.exception.message.ApplicationErrorCode;
+import com.dgd.model.dto.CreateChatRoomDto;
 import com.dgd.model.dto.SharingApplicationDto;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.SharingApplication;
@@ -27,6 +28,7 @@ public class SharingApplicationService {
     private final SharingApplicationRepository sharingApplicationRepository;
     private final UserRepository userRepository;
     private final GoodRepository goodRepository;
+    private final ChatRoomService chatRoomService;
 
     /**
      * 나눔 신청
@@ -53,8 +55,12 @@ public class SharingApplicationService {
         Double offerLon = good.getLongitude();
 
         double distance = dis.getDistance(takerLat, takerLon, offerLat, offerLon);
-        sharingApplicationRepository.save(form.toEntity(good, user, distance));
-
+        SharingApplication sharingApplication = sharingApplicationRepository.save(form.toEntity(good, user, distance));
+        CreateChatRoomDto createChatRoomDto = CreateChatRoomDto.builder()
+                .sharingApplicationId(sharingApplication.getId())
+                .userId(user.getUserId())
+                .build();
+        chatRoomService.createChatRoom(createChatRoomDto);
     }
 
     /**

@@ -2,8 +2,8 @@ package com.dgd.service;
 
 import com.dgd.model.dto.Point;
 import com.dgd.model.type.SearchType;
-import com.dgd.exception.ApplicationErrorCode;
-import com.dgd.exception.ApplicationException;
+import com.dgd.exception.message.ApplicationErrorCode;
+import com.dgd.exception.error.ApplicationException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
