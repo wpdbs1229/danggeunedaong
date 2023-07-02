@@ -54,7 +54,7 @@ public class PetService {
                 .petType(addPetDto.getPetType())
                 .petGender(addPetDto.getPetGender())
                 .petSize(addPetDto.getPetSize())
-                .petImage(s3Service.uploadImage(multipartFile))
+                .petImage(s3Service.uploadUserImage(multipartFile))
                 .petAge(petAge)
                 .userId(addPetDto.getUserId())
                 .build();

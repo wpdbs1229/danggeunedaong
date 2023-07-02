@@ -61,6 +61,7 @@ public class SharingApplicationService {
 
     /**
      * 나눔 신청 목록 불러오기
+     *
      * @param goodId
      * @return
      */
@@ -83,6 +84,7 @@ public class SharingApplicationService {
 
 
             responses.add(SharingApplicationDto.Response.builder()
+                    .sharingId(application.getId())
                     .userId(application.getUser().getUserId())
                     .distance(application.getDistance())
                     .profileUrl(application.getUser().getProfileUrl())
@@ -93,10 +95,10 @@ public class SharingApplicationService {
         return responses;
     }
 
-    public void cancelSharingApplication(Long sharingApplicationId){
+    public void cancelSharingApplication(Long sharingApplicationId) {
         boolean exists = sharingApplicationRepository.existsById(sharingApplicationId);
 
-        if (!exists){
+        if (!exists) {
             throw new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_APPLICATION);
         }
 

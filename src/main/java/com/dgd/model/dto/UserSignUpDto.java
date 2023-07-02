@@ -1,6 +1,5 @@
 package com.dgd.model.dto;
 
-
 import lombok.*;
 
 import javax.persistence.Column;
@@ -22,4 +21,3 @@ public class UserSignUpDto {
     private String password;
     private String location;
 }
-

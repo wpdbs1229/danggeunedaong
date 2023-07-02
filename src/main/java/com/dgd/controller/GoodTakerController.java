@@ -39,10 +39,10 @@ public class GoodTakerController {
     /**
      * 상품 검색
      * @param keyword
-     * @param minLatitude
-     * @param minLongitude
-     * @param maxLatitude
-     * @param maxLongitude
+     * @param swLatitude
+     * @param swLongitude
+     * @param neLatitude
+     * @param neLongitude
      * @param mainCategory
      * @param subCategory
      * @param status
@@ -51,16 +51,15 @@ public class GoodTakerController {
      */
     @GetMapping("/search/title")
     public ResponseEntity<?> searchTitle( @RequestParam(required = false) String keyword,
-                                          @RequestParam(required = false) Double minLatitude,
-                                          @RequestParam(required = false) Double minLongitude,
-                                          @RequestParam(required = false) Double maxLatitude,
-                                          @RequestParam(required = false) Double maxLongitude,
+                                          @RequestParam(required = false) Double swLatitude,
+                                          @RequestParam(required = false) Double swLongitude,
+                                          @RequestParam(required = false) Double neLatitude,
+                                          @RequestParam(required = false) Double neLongitude,
                                           @RequestParam(required = false) MainCategory mainCategory,
                                           @RequestParam(required = false) SubCategory subCategory,
                                           @RequestParam(required = false) Status status,
                                           @PageableDefault(sort = "id", direction = Sort.Direction.DESC )Pageable pageable){
-        var result = goodTakerService.searchGoods(keyword, minLatitude,minLongitude,maxLatitude,maxLongitude,mainCategory,subCategory,status,pageable);
-        System.out.println("1");
+        var result = goodTakerService.searchGoods(keyword, swLatitude, swLongitude, neLatitude, neLongitude,mainCategory,subCategory,status,pageable);
         return ResponseEntity.ok(result);
     }
 }

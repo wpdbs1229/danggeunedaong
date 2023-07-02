@@ -1,9 +1,7 @@
 package com.dgd.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.exception.error.ApplicationException;
-import com.dgd.model.dto.FileDetail;
 import com.dgd.model.dto.GoodDto;
 import com.dgd.model.dto.MatchUserDto;
 import com.dgd.model.entity.Good;
@@ -57,7 +55,7 @@ public class GoodOfferService {
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
 
 
-        List<String> goodImages = s3Service.uploadImage(multipartFiles);
+        List<String> goodImages = s3Service.uploadGoodImage(multipartFiles);
 
         GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
         goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
@@ -95,7 +93,7 @@ public class GoodOfferService {
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
         s3Service.deleteImage(good);
-        List<String> goodImages = s3Service.uploadImage(multipartFiles);
+        List<String> goodImages = s3Service.uploadGoodImage(multipartFiles);
         good.update(form,goodImages);
 
         goodRepository.save(good);
