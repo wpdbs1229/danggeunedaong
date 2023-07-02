@@ -19,4 +19,9 @@ public class ChatRoom {
 
     private String takerId;
     private String offerId;
+    private boolean isOpened;
+
+    public void roomOpen() {
+        this.isOpened = true;
+    }
 }

@@ -16,9 +16,13 @@ import javax.validation.Valid;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
+    @PostMapping("/create")
+    public ResponseEntity<ChatRoom> createChatRoom(@RequestBody @Valid CreateChatRoomDto createChatRoomDto) {
+        return ResponseEntity.ok(chatRoomService.createChatRoom(createChatRoomDto));
+    }
+
     @GetMapping("/enter")
-    public String enterChatRoom(@RequestBody @Valid EnterChatRoomDto enterChatRoomDto) {
-        return chatRoomService.enterChatRoom(enterChatRoomDto);
+    public void enterChatRoom(@RequestBody @Valid EnterChatRoomDto enterChatRoomDto) {
     }
 
     @DeleteMapping("/leave")
