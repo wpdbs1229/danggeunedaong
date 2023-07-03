@@ -77,4 +77,27 @@ public class GoodTakerService {
                 .build();
         return wholeResponseList;
     }
+
+    public GoodDto.WholeResponseList searchCoordinate(final String keyword,
+                                                      final Double minLatitude,
+                                                      final Double minLongitude,
+                                                      final Double maxLatitude,
+                                                      final Double maxLongitude,
+                                                      final MainCategory mainCategory,
+                                                      final SubCategory subCategory,
+                                                      final Status status
+                                                 ){
+        List<Good> goods = goodQueryRepository.findCoordinate(keyword, minLatitude, minLongitude, maxLatitude, maxLongitude, mainCategory, subCategory, status);
+
+        List<GoodDto.ResponseList> response = new ArrayList<>();
+
+        for (Good good :goods){
+            response.add(good.toResponsesDto());
+        }
+
+        GoodDto.WholeResponseList wholeResponseList = GoodDto.WholeResponseList.builder()
+                .responseLists(response)
+                .build();
+        return wholeResponseList;
+    }
 }

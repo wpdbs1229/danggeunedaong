@@ -55,7 +55,38 @@ public class GoodQueryRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
+    public List<Good> findCoordinate(final String keyword,
+                                     final Double minLatitude,
+                                     final Double minLongitude,
+                                     final Double maxLatitude,
+                                     final Double maxLongitude,
+                                     final MainCategory mainCategory,
+                                     final SubCategory subCategory,
+                                     final Status status
+                                                ){
+        List<Good> goodList =  jpaQueryFactory.selectFrom(good)
+                .where(
+                        toContainsKeyword(keyword),
+                        eqMainCategory(mainCategory),
+                        eqSubCategory(subCategory),
+                        eqStatus(status),
+                        gtMinLatitude(minLatitude),
+                        gtMinLongitude(minLongitude),
+                        ltMaxLatitude(maxLatitude),
+                        ltMaxLongitude(maxLongitude)
+                )
+                .fetch();
 
+
+
+
+        List<Good> content = new ArrayList<>();
+
+        for (int i = 0; i < goodList.size(); i++){
+            content.add(goodList.get(i));
+        }
+        return content;
+    }
     private BooleanExpression toContainsKeyword(String keyword){
         if (keyword == null||StringUtils.hasText(keyword) ){
             return null;

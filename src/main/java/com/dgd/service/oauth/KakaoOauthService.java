@@ -60,7 +60,7 @@ public class KakaoOauthService {
             BigInteger id = element.getAsJsonObject().get("id").getAsBigInteger();
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
             String nickName = "";
-            if(hasEmail){
+            if (hasEmail) {
                 nickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
             }
 
@@ -78,11 +78,12 @@ public class KakaoOauthService {
 
                 return user.getRoleKey() + accessToken;
 
-            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()){
+            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()) {
                 UserSignInDto dto = UserSignInDto.builder()
-                                                .userId(String.valueOf(id))
-                                                .password(passwordEncoder.encode(String.valueOf(id)))
-                                                .build();
+                        .userId(String.valueOf(id))
+//                                                .password(passwordEncoder.encode(String.valueOf(id)))
+                        .password(String.valueOf(id))
+                        .build();
                 br.close();
 
                 return userService.signIn(dto, response);
