@@ -62,4 +62,18 @@ public class GoodTakerController {
         var result = goodTakerService.searchGoods(keyword, swLatitude, swLongitude, neLatitude, neLongitude,mainCategory,subCategory,status,pageable);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/search/coordinate")
+    public ResponseEntity<?> searchGoods( @RequestParam(required = false) String keyword,
+                                          @RequestParam(required = false) Double swLatitude,
+                                          @RequestParam(required = false) Double swLongitude,
+                                          @RequestParam(required = false) Double neLatitude,
+                                          @RequestParam(required = false) Double neLongitude,
+                                          @RequestParam(required = false) MainCategory mainCategory,
+                                          @RequestParam(required = false) SubCategory subCategory,
+                                          @RequestParam(required = false) Status status){
+        var result = goodTakerService.searchCoordinate(keyword, swLatitude, swLongitude, neLatitude, neLongitude,mainCategory,subCategory,status);
+        return ResponseEntity.ok(result);
+    }
+
 }

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -41,9 +42,10 @@ public class SecurityConfig {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/user/**", "/oauth/**", "/pet/**").permitAll()
-                .antMatchers("/websocket/**", "/chat/**", "/good/**").permitAll()
+                .antMatchers("/websocket/**", "/chat/**", "/good/**","/sharing").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -57,7 +59,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-
         config.addAllowedOrigin("http://3.36.236.207"); // 프론트 IPv4 주소
         config.addAllowedOrigin("http://13.209.220.63"); // 백엔드 IPv4 주소
         config.addAllowedMethod("*"); // 모든 메소드 허용.

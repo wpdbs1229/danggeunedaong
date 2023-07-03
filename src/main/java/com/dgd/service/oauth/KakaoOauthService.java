@@ -63,6 +63,7 @@ public class KakaoOauthService {
             String nickName = "";
             String picture = "";
             if(hasEmail){
+
                 nickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
                 picture = element.getAsJsonObject().get("properties").getAsJsonObject().get("picture").getAsString();
             }
@@ -81,11 +82,13 @@ public class KakaoOauthService {
 
                 return user.getRoleKey() + accessToken;
 
-            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()){
+            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()) {
                 UserSignInDto dto = UserSignInDto.builder()
+
                                                 .userId(String.valueOf(id))
                                                 .password(String.valueOf(id))
                                                 .build();
+
                 br.close();
 
                 return userService.signIn(dto, response);
