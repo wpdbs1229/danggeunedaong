@@ -59,8 +59,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOrigin("http://localhost:3000"); // 로컬
         config.addAllowedOrigin("http://3.36.236.207"); // 프론트 IPv4 주소
         config.addAllowedOrigin("http://13.209.220.63"); // 백엔드 IPv4 주소
         config.addAllowedMethod("*"); // 모든 메소드 허용.

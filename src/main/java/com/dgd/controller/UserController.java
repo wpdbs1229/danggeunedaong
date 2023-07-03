@@ -53,4 +53,9 @@ public class UserController {
     public ResponseEntity<User> getUserInfo(@RequestParam @Valid String userId) {
         return ResponseEntity.ok(userService.getUserInfo(userId));
     }
+
+    @GetMapping("/payload")
+    public ResponseEntity<User> getUserInfoByToken(@RequestParam @Valid String accessToken) {
+        return ResponseEntity.ok(userService.getUserIdByAccessToken(accessToken));
+    }
 }

@@ -81,7 +81,6 @@ public class NaverOauthService {
             } else if (userRepository.findBySocialTypeAndSocialId(SocialType.NAVER, email).isPresent()){
                 UserSignInDto dto = UserSignInDto.builder()
                         .userId(String.valueOf(email))
-//                        .password(passwordEncoder.encode(String.valueOf(email)))
                         .password(String.valueOf(email))
                         .build();
 
@@ -99,7 +98,7 @@ public class NaverOauthService {
     public User saveUser(String userId, String email, String profileUrl) {
         User user = User.builder()
                 .userId(email)
-                .password(email.toString())
+                .password(email)
                 .socialId(userId)
                 .profileUrl(profileUrl)
                 .socialType(SocialType.NAVER)

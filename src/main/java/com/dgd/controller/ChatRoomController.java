@@ -22,7 +22,8 @@ public class ChatRoomController {
     }
 
     @GetMapping("/enter")
-    public void enterChatRoom(@RequestBody @Valid EnterChatRoomDto enterChatRoomDto) {
+    public ResponseEntity<ChatRoom> enterChatRoom(@RequestBody @Valid EnterChatRoomDto enterChatRoomDto) {
+        return ResponseEntity.ok(chatRoomService.enterChatRoom(enterChatRoomDto));
     }
 
     @DeleteMapping("/leave")

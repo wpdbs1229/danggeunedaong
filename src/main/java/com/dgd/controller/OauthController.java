@@ -25,6 +25,8 @@ public class OauthController {
     @PostMapping("/naverLogin")
     public String naverSignUp(@RequestParam @Valid String accessToken, HttpServletResponse response) {
 
-       return naverOauthService.createNaverUser(accessToken, response);
+
+        return naverOauthService.createNaverUser(accessToken, response);
+
     }
 }
