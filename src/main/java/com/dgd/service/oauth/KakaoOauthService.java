@@ -59,13 +59,16 @@ public class KakaoOauthService {
 
             BigInteger id = element.getAsJsonObject().get("id").getAsBigInteger();
             boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+
             String nickName = "";
+            String picture = "";
             if(hasEmail){
                 nickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
+                picture = element.getAsJsonObject().get("properties").getAsJsonObject().get("picture").getAsString();
             }
 
             if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isEmpty()) {
-                User user = saveUser(String.valueOf(id), nickName);
+                User user = saveUser(String.valueOf(id), nickName, picture);
 
                 UserSignInDto userSignInDto = UserSignInDto.builder()
                         .userId(String.valueOf(id))
@@ -81,7 +84,7 @@ public class KakaoOauthService {
             } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()){
                 UserSignInDto dto = UserSignInDto.builder()
                                                 .userId(String.valueOf(id))
-                                                .password(passwordEncoder.encode(String.valueOf(id)))
+                                                .password(String.valueOf(id))
                                                 .build();
                 br.close();
 
@@ -94,11 +97,12 @@ public class KakaoOauthService {
         return null;
     }
 
-    public User saveUser(String id, String nickName) {
+    public User saveUser(String id, String nickName, String picture) {
         User user = User.builder()
                 .userId(id)
                 .password(passwordEncoder.encode(id))
                 .socialId(nickName)
+                .profileUrl(picture)
                 .socialType(SocialType.KAKAO)
                 .role(Role.GUEST)
                 .build();

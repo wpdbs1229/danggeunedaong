@@ -119,7 +119,6 @@ public class UserService {
         user.update(updateUserDto, s3Service.uploadUserImage(multipartFile));
         user.authorizeUser();
 
-
        return user;
     }
 
@@ -139,5 +138,10 @@ public class UserService {
     public User getUserInfo(String userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+    }
+
+    public User getUserIdByAccessToken(String accessToken) {
+        String payload = jwtTokenProvider.getPayloadSub(accessToken);
+        return getUserInfo(payload);
     }
 }

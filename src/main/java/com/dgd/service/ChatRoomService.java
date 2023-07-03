@@ -42,7 +42,7 @@ public class ChatRoomService {
 
         return chatRoomRepository.save(chatRoom);
     }
-    public void enterChatRoom(EnterChatRoomDto enterChatRoomDto) throws ChatException {
+    public ChatRoom enterChatRoom(EnterChatRoomDto enterChatRoomDto) throws ChatException {
         ChatRoom chatRoom = chatRoomRepository.findById(enterChatRoomDto.getRoomId())
                 .orElseThrow(() -> new ChatException(NOT_ACTIVATED_APPLICATION));
         if(!enterChatRoomDto.getUserId().equals(chatRoom.getOfferId())) {
@@ -52,6 +52,7 @@ public class ChatRoomService {
             throw new AuthenticationException(UNAUTHORIZED_REQUEST);
         }
         chatRoom.roomOpen();
+        return chatRoom;
     }
 
     public void deleteRoom(Long roomId) {

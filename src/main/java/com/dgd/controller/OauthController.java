@@ -17,14 +17,14 @@ public class OauthController {
     private final NaverOauthService naverOauthService;
 
     @PostMapping("/kakaoLogin")
-    public void kakaoSignUp(@RequestParam @Valid String accessToken, HttpServletResponse response) {
+    public String kakaoSignUp(@RequestParam @Valid String accessToken, HttpServletResponse response) {
 
-        kakaoOauthService.createKakaoUser(accessToken, response);
+        return kakaoOauthService.createKakaoUser(accessToken, response);
     }
 
     @PostMapping("/naverLogin")
-    public void naverSignUp(@RequestParam @Valid String accessToken, HttpServletResponse response) {
+    public String naverSignUp(@RequestParam @Valid String accessToken, HttpServletResponse response) {
 
-        naverOauthService.createNaverUser(accessToken, response);
+        return naverOauthService.createNaverUser(accessToken, response);
     }
 }
