@@ -58,4 +58,9 @@ public class UserController {
     public ResponseEntity<User> getUserInfoByToken(@RequestParam @Valid String accessToken) {
         return ResponseEntity.ok(userService.getUserIdByAccessToken(accessToken));
     }
+
+    @PostMapping("/logout")
+    public void logOut(@RequestParam @Valid String accessToken, HttpServletResponse response) {
+        userService.logOut(accessToken, response);
+    }
 }

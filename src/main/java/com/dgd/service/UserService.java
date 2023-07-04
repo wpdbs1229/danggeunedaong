@@ -40,6 +40,7 @@ public class UserService {
     private final PointService pointService;
     private final S3Service s3Service;
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
+    private final Long accessTokenValidTime = 6 * 60 * 60 * 1000L;
 
 
     public User signUp (UserSignUpDto signUpDto) {
@@ -143,5 +144,20 @@ public class UserService {
     public User getUserIdByAccessToken(String accessToken) {
         String payload = jwtTokenProvider.getPayloadSub(accessToken);
         return getUserInfo(payload);
+    }
+
+    public void logOut(String accessToken, HttpServletResponse response) {
+        if (!jwtTokenProvider.validateAccessToken(accessToken)) {
+            throw new AuthenticationException(INVALID_TOKEN);
+        }
+
+        String userId = jwtTokenProvider.getPayloadSub(accessToken);
+        if (redisTemplate.opsForValue().get(userId) != null) {
+            redisTemplate.delete(userId);
+            cookieProvider.deleteRefreshTokenCookie(response);
+        }
+
+        Long expired = jwtTokenProvider.getExpiration(accessToken);
+        redisTemplate.opsForValue().set("blacklist", accessToken, expired, TimeUnit.MILLISECONDS);
     }
 }
