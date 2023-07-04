@@ -118,4 +118,12 @@ public class JwtTokenProvider {
             throw new AuthenticationException(INVALID_TOKEN);
         }
     }
+
+    public Long getExpiration(String token) {
+        // accessToken 남은 유효시간
+        Date expiration = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
+    }
 }
