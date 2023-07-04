@@ -45,8 +45,8 @@ public class UserController {
      * *** Refresh Token 은 재발급 안됨 ! ( 보안 > 편의 ) ***
      */
     @GetMapping("/token")
-    public ResponseEntity<String> getAccessToken(@RequestParam @Valid String accessToken) {
-       return ResponseEntity.ok(userService.getAccessTokenByUser(accessToken));
+    public ResponseEntity<String> getAccessToken(@RequestParam @Valid String refreshToken) {
+       return ResponseEntity.ok(userService.getAccessTokenByUser(refreshToken));
     }
 
     @GetMapping("/info")
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public void logOut(@RequestParam @Valid String accessToken, HttpServletResponse response) {
-        userService.logOut(accessToken, response);
+    public void logOut(@RequestHeader("refreshToken")String refreshToken, HttpServletResponse response) {
+        userService.logOut(refreshToken, response);
     }
 }

@@ -123,8 +123,11 @@ public class UserService {
        return user;
     }
 
-    public String getAccessTokenByUser(String accessToken) {
-        String userId = jwtTokenProvider.getPayloadSub(accessToken);
+    public String getAccessTokenByUser(String refreshToken) {
+        if(!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            throw new AuthenticationException(INVALID_TOKEN);
+        }
+        String userId = jwtTokenProvider.getPayloadSub(refreshToken);
         Optional<User> user = userRepository.findByUserId(userId);
         String password = user.get().getPassword();
         if(!redisTemplate.opsForValue().get(userId).isEmpty()) {
@@ -146,18 +149,18 @@ public class UserService {
         return getUserInfo(payload);
     }
 
-    public void logOut(String accessToken, HttpServletResponse response) {
-        if (!jwtTokenProvider.validateAccessToken(accessToken)) {
+    public void logOut(String refreshToken, HttpServletResponse response) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw new AuthenticationException(INVALID_TOKEN);
         }
 
-        String userId = jwtTokenProvider.getPayloadSub(accessToken);
+        String userId = jwtTokenProvider.getPayloadSub(refreshToken);
         if (redisTemplate.opsForValue().get(userId) != null) {
             redisTemplate.delete(userId);
             cookieProvider.deleteRefreshTokenCookie(response);
         }
 
-        Long expired = jwtTokenProvider.getExpiration(accessToken);
-        redisTemplate.opsForValue().set("blacklist", accessToken, expired, TimeUnit.MILLISECONDS);
+        Long expired = jwtTokenProvider.getExpiration(refreshToken);
+        redisTemplate.opsForValue().set(refreshToken, "blacklist", expired, TimeUnit.MILLISECONDS);
     }
 }
