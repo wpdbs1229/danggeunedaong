@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +32,7 @@ public class JwtTokenProvider {
     private final Long refreshTokenValidTime = 2 * 24 * 60 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public String generateAccessToken(Authentication authentication) {
         Claims claims = Jwts.claims().setSubject(authentication.getName());
@@ -102,6 +104,10 @@ public class JwtTokenProvider {
     }
 
     public Boolean validateAccessToken(String token) {
+        String isBlackList = redisTemplate.opsForValue().get(token);
+        if (isBlackList != null && isBlackList.equals("blacklist")) {
+            return false;
+        }
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
