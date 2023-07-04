@@ -18,4 +18,12 @@ public class CookieProvider {
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
+
+    public void deleteRefreshTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie(refreshTokenName, null);
+        cookie.setMaxAge(0); // 즉시 만료
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+    }
 }
