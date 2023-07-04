@@ -1,7 +1,6 @@
 package com.dgd.controller;
 
 import com.dgd.model.dto.GoodDto;
-import com.dgd.model.dto.MatchUserDto;
 import com.dgd.service.GoodOfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +68,10 @@ public class GoodOfferController {
      * @param goodId
      * @return
      */
-    @PatchMapping("/status")
+    @PutMapping("/status")
     public ResponseEntity<?> updateStatus(@Valid @RequestParam Long goodId){
-        goodOfferService.updateStatus(goodId);
-        return ResponseEntity.ok("나눔 상태가 변경되었습니다.");
+        var result = goodOfferService.updateStatus(goodId);
+        return ResponseEntity.ok(result);
     }
     /**
      * 상품 삭제
@@ -87,7 +86,8 @@ public class GoodOfferController {
 
 
     @GetMapping("/match") // 조회하는 유저가 offer 인지, taker 인지
-    public void matchUser(@RequestBody @Valid MatchUserDto matchUserDto) {
-        goodOfferService.matchUser(matchUserDto);
+    public ResponseEntity<?> matchUser(@RequestParam String userId,
+                          @RequestParam Long goodId) {
+        return ResponseEntity.ok(goodOfferService.matchUser(userId, goodId));
     }
 }

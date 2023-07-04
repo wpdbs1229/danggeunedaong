@@ -65,13 +65,13 @@ public class Good extends Base {
         this.goodImageList = goodImageList;
     }
 
-    public void updateStatus(Status status){
+    public Status updateStatus(Status status){
         if (Status.SHARING.equals(status)){
             this.status = Status.COMPLETE;
         } else {
             this.status = Status.SHARING;
         }
-
+        return this.status;
     }
 
     public GoodDto.Response toResponseDto(User user){
@@ -107,8 +107,13 @@ public class Good extends Base {
         return  GoodDto.ResponseList.builder()
                 .goodId(this.id)
                 .title(this.title)
+                .latitude(this.latitude)
+                .longitude(this.longitude)
+                .status(this.status)
+                .mainCategory(this.mainCategory)
+                .subCategory(this.subCategory)
                 .location(this.getUser().getLocation())
-                .featuredImages(this.goodImageList)
+                .goodImages(this.goodImageList)
                 .build();
 
     }

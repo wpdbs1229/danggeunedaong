@@ -33,7 +33,7 @@ public class UserController {
         return userService.signIn(dto, response);
     }
 
-    @PatchMapping("/change")
+    @PutMapping("/change")
     public void updateSocialUser (@RequestPart(value = "request") @Valid UpdateUserDto updateUserDto,
                                   @RequestPart(required = false, value = "file") MultipartFile multipartFile) {
         userService.updateUser(updateUserDto,multipartFile);

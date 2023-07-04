@@ -99,8 +99,13 @@ public class GoodDto {
     public static class ResponseList {
         private Long goodId;
         private String title;
-        private List<String> featuredImages;
+        private List<String> goodImages;
+        private double latitude; // 위도
+        private double longitude; // 경도
         private String location;
+        private Status status;
+        private MainCategory mainCategory;
+        private SubCategory subCategory;
     }
 
     @Getter

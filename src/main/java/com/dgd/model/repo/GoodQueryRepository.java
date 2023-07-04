@@ -119,27 +119,27 @@ public class GoodQueryRepository {
         if (minLatitude == null || minLatitude.isNaN() || minLatitude.isInfinite()){
             return null;
         }
-        return good.latitude.gt(minLatitude);
+        return good.latitude.goe(minLatitude);
     }
 
     private BooleanExpression gtMinLongitude(final Double minLongitude){
         if (minLongitude == null || minLongitude.isNaN() || minLongitude.isInfinite()){
             return null;
         }
-        return good.longitude.gt(minLongitude);
+        return good.longitude.goe(minLongitude);
     }
 
     private BooleanExpression ltMaxLatitude(final Double maxLatitude){
         if (maxLatitude == null || maxLatitude.isNaN() || maxLatitude.isInfinite()){
             return null;
         }
-        return good.latitude.lt(maxLatitude);
+        return good.latitude.loe(maxLatitude);
     }
 
     private BooleanExpression ltMaxLongitude(final Double maxLongitude){
         if (maxLongitude == null || maxLongitude.isNaN() || maxLongitude.isInfinite()){
             return null;
         }
-        return good.longitude.lt(maxLongitude);
+        return good.longitude.loe(maxLongitude);
     }
 }

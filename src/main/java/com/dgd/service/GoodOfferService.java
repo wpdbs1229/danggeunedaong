@@ -3,7 +3,6 @@ package com.dgd.service;
 import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.exception.error.ApplicationException;
 import com.dgd.model.dto.GoodDto;
-import com.dgd.model.dto.MatchUserDto;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.GoodViewCount;
 import com.dgd.model.entity.User;
@@ -118,16 +117,17 @@ public class GoodOfferService {
      * 나눔 상태 변경
      * @param goodId
      */
-    public void updateStatus(Long goodId) {
+    public Status updateStatus(Long goodId) {
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
-        good.updateStatus(good.getStatus());
+        Status status = good.updateStatus(good.getStatus());
         goodRepository.save(good);
+        return status;
     }
 
-    public boolean matchUser(MatchUserDto matchUserDto) {
-        Optional<User> user = goodRepository.findUserById(matchUserDto.getGoodId());
-        return matchUserDto.getUserId().equals(user.get().getUserId());
+    public boolean matchUser(String userId, Long goodId) {
+        Optional<User> user = goodRepository.findUserById(goodId);
+        return userId.equals(user.get().getUserId());
     }
 }
