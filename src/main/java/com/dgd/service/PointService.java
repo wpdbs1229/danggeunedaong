@@ -43,8 +43,8 @@ public class PointService {
             JsonObject jsResult = jsrs.get("result").getAsJsonObject();
             JsonObject jspoitn = jsResult.get("point").getAsJsonObject();
 
-            String jsonLongitude = jspoitn.get("x").getAsString();
-            String jsonLatitude = jspoitn.get("y").getAsString();
+            String jsonLongitude = jspoitn.get("y").getAsString();
+            String jsonLatitude = jspoitn.get("x").getAsString();
             return new Point(Double.parseDouble(jsonLongitude),Double.parseDouble(jsonLatitude));
         } catch (IOException e) {
             throw new ApplicationException(ApplicationErrorCode.NOT_VALID_ADDRESS);

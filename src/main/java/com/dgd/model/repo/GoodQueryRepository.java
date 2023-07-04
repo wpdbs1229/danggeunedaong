@@ -37,10 +37,10 @@ public class GoodQueryRepository {
                         eqMainCategory(mainCategory),
                         eqSubCategory(subCategory),
                         eqStatus(status),
-                        gtMinLatitude(minLatitude),
-                        gtMinLongitude(minLongitude),
                         ltMaxLatitude(maxLatitude),
-                        ltMaxLongitude(maxLongitude)
+                        ltMaxLongitude(maxLongitude),
+                        gtMinLatitude(minLatitude),
+                        gtMinLongitude(minLongitude)
                 )
                 .fetch();
 
@@ -70,15 +70,13 @@ public class GoodQueryRepository {
                         eqMainCategory(mainCategory),
                         eqSubCategory(subCategory),
                         eqStatus(status),
-                        gtMinLatitude(minLatitude),
-                        gtMinLongitude(minLongitude),
                         ltMaxLatitude(maxLatitude),
-                        ltMaxLongitude(maxLongitude)
+                        ltMaxLongitude(maxLongitude),
+                        gtMinLatitude(minLatitude),
+                        gtMinLongitude(minLongitude)
+
                 )
                 .fetch();
-
-
-
 
         List<Good> content = new ArrayList<>();
 
