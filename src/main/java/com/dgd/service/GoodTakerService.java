@@ -65,17 +65,6 @@ public class GoodTakerService {
                                                   final Pageable pageable){
         Page<Good> goods = (Page<Good>) goodQueryRepository.findWithSearchConditions(keyword, minLatitude,minLongitude,maxLatitude,maxLongitude,mainCategory,subCategory,status,pageable);
 
-
-//        List<GoodDto.ResponseList> response = new ArrayList<>();
-//
-//        for (Good good :goods){
-//            response.add(good.toResponsesDto());
-//        }
-//
-//        GoodDto.WholeResponseList wholeResponseList = GoodDto.WholeResponseList.builder()
-//                .responseLists(response)
-//                .totalPageNum(goods.getTotalPages())
-//                .build();
         return toResponseDto(goods);
     }
 
