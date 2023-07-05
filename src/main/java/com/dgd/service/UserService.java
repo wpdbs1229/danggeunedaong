@@ -110,7 +110,7 @@ public class UserService {
 
         User user = userRepository.findById(updateUserDto.getId())
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
-      
+
         if (!DEFAULT.equals(user.getProfileUrl())){
             s3Service.deleteImage(user);
         }
@@ -142,8 +142,9 @@ public class UserService {
     }
 
     public User getUserInfo(String userId) {
-        return userRepository.findByUserId(userId)
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
+        return user;
     }
 
     public User getUserIdByAccessToken(String accessToken) {

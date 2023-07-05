@@ -10,5 +10,4 @@ public interface GoodRepository extends JpaRepository<Good, Long> {
 
     List<Good> findAllByUser(User user);
 
-    Optional<User> findUserById (Long id);
 }

@@ -127,7 +127,9 @@ public class GoodOfferService {
     }
 
     public boolean matchUser(String userId, Long goodId) {
-        Optional<User> user = goodRepository.findUserById(goodId);
-        return userId.equals(user.get().getUserId());
+        Good good = goodRepository.findById(goodId)
+                .orElseThrow(()-> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
+        boolean equals = userId.equals(good.getUser().getUserId());
+        return equals;
     }
 }
