@@ -20,7 +20,6 @@ bin/
 ### IntelliJ IDEA ###
 application.properties
 application-aws.yml
-application.properties
 .idea
 *.iws
 *.iml

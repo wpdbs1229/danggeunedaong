@@ -107,7 +107,7 @@ public class SharingApplicationService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
 
-        return sharingApplicationRepository.findAllByUser(user);
+        return user.getSharingApplications();
     }
 
     public Good searchGoodByApply(Long sharingApplicationId) {

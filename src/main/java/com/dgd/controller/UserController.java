@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public void logOut(@RequestHeader("refreshToken")String refreshToken, HttpServletResponse response) {
-        userService.logOut(refreshToken, response);
+    public void logOut(HttpServletRequest request, HttpServletResponse response) {
+        userService.logOut(request, response);
     }
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateChatRoomDto {
-    private String userId;
+    private String offerId;
+    private String takerId;
     private Long sharingApplicationId;
 }

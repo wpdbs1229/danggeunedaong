@@ -2,10 +2,7 @@ package com.dgd.model.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -16,7 +13,8 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    private SharingApplication sharingApplication;
     private String takerId;
     private String offerId;
     private boolean isOpened;

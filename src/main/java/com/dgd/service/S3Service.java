@@ -2,7 +2,6 @@ package com.dgd.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.dgd.exception.error.ApplicationException;
-import com.dgd.exception.message.ApplicationErrorCode;
 import com.dgd.model.dto.FileDetail;
 import com.dgd.model.entity.Good;
 import com.dgd.model.entity.User;
@@ -73,7 +72,7 @@ public class S3Service {
      */
     public void deleteImage(Good good) {
         List<String> goodImageList = good.getGoodImageList();
-        for( String goodImage : goodImageList){
+        for(String goodImage : goodImageList){
             String keyName = goodImage.substring(58);
             boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
             if (isObjectExist){
