@@ -30,7 +30,7 @@ public class GoodQueryRepository {
                                                 final MainCategory mainCategory,
                                                 final SubCategory subCategory,
                                                 final Status status,
-                                                final Pageable pageable){
+                                                Pageable pageable){
         List<Good> goodList =  jpaQueryFactory.selectFrom(good)
                 .where(
                         toContainsKeyword(keyword),
