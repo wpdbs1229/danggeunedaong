@@ -50,7 +50,7 @@ public class User {
 
     private String profileUrl;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<SharingApplication> sharingApplications;
 
