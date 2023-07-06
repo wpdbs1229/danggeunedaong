@@ -54,7 +54,7 @@ public class GoodTakerService {
      * @param pageable
      * @return
      */
-    public GoodDto.WholeResponseList searchGoods(final String keyword,
+    public Page<GoodDto.ResponseList> searchGoods(final String keyword,
                                                   final Double minLatitude,
                                                   final Double minLongitude,
                                                   final Double maxLatitude,
@@ -65,19 +65,26 @@ public class GoodTakerService {
                                                   final Pageable pageable){
         Page<Good> goods = (Page<Good>) goodQueryRepository.findWithSearchConditions(keyword, minLatitude,minLongitude,maxLatitude,maxLongitude,mainCategory,subCategory,status,pageable);
 
-        List<GoodDto.ResponseList> response = new ArrayList<>();
-
-        for (Good good :goods){
-            response.add(good.toResponsesDto());
-        }
-
-        GoodDto.WholeResponseList wholeResponseList = GoodDto.WholeResponseList.builder()
-                .responseLists(response)
-                .totalPageNum(goods.getTotalPages())
-                .build();
-        return wholeResponseList;
+        return toResponseDto(goods);
     }
 
+    public Page<GoodDto.ResponseList> toResponseDto(Page<Good> goods){
+        Page<GoodDto.ResponseList> pageResponse =
+                goods.map( m ->
+                        GoodDto.ResponseList.builder()
+                                .goodId(m.getId())
+                                .title(m.getTitle())
+                                .latitude(m.getLatitude())
+                                .longitude(m.getLongitude())
+                                .status(m.getStatus())
+                                .mainCategory(m.getMainCategory())
+                                .subCategory(m.getSubCategory())
+                                .location(m.getUser().getLocation())
+                                .goodImages(m.getGoodImageList())
+                                .build());
+
+        return pageResponse;
+    }
     public GoodDto.WholeResponseList searchCoordinate(final String keyword,
                                                       final Double minLatitude,
                                                       final Double minLongitude,

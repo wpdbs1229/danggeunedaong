@@ -106,7 +106,6 @@ public class SharingApplicationService {
     public List<SharingApplication> searchMyapplyList(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
-
         List<SharingApplication> sharingApplications = sharingApplicationRepository.findAllByUser(user);
         return sharingApplications;
     }

@@ -58,7 +58,7 @@ public class GoodTakerController {
                                           @RequestParam(required = false) MainCategory mainCategory,
                                           @RequestParam(required = false) SubCategory subCategory,
                                           @RequestParam(required = false) Status status,
-                                          @PageableDefault(sort = "id", direction = Sort.Direction.DESC )Pageable pageable){
+                                          @PageableDefault(sort = "id", direction = Sort.Direction.DESC)Pageable pageable){
         var result = goodTakerService.searchGoods(keyword, swLatitude, swLongitude, neLatitude, neLongitude,mainCategory,subCategory,status,pageable);
         return ResponseEntity.ok(result);
     }

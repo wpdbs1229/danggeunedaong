@@ -25,7 +25,7 @@ public class Good extends Base {
     private long id;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "good", orphanRemoval = true)
+    @OneToMany(mappedBy = "good", orphanRemoval = true)
     private List<SharingApplication> sharingApplications;
 
     @JsonIgnore
