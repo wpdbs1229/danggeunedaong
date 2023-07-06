@@ -35,7 +35,7 @@ public class KakaoOauthService {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoOutput(true);
             conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
 
@@ -65,7 +65,7 @@ public class KakaoOauthService {
             if(hasEmail){
 
                 nickName = element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
-                picture = element.getAsJsonObject().get("properties").getAsJsonObject().get("picture").getAsString();
+                picture = element.getAsJsonObject().get("properties").getAsJsonObject().get("profile_image").getAsString();
             }
 
             if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isEmpty()) {
@@ -103,7 +103,7 @@ public class KakaoOauthService {
     public User saveUser(String id, String nickName, String picture) {
         User user = User.builder()
                 .userId(id)
-                .password(passwordEncoder.encode(id))
+                .password(id)
                 .socialId(nickName)
                 .profileUrl(picture)
                 .socialType(SocialType.KAKAO)

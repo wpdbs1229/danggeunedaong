@@ -5,6 +5,7 @@ import com.dgd.model.type.MainCategory;
 import com.dgd.model.type.Status;
 import com.dgd.model.type.SubCategory;
 import com.dgd.service.EtcFeat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,9 +24,11 @@ public class Good extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "good", orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "good", orphanRemoval = true)
     private List<SharingApplication> sharingApplications;
 
+    @JsonIgnore
     @ManyToOne
     private User user;
 
@@ -99,6 +102,7 @@ public class Good extends Base {
                 .featuredImage(this.goodImageList)
                 .updatedAt(this.getUpdatedAt())
                 .location(this.getUser().getLocation())
+                .status(this.status)
                 .sharingApplicationNum(sharingApplicationNum)
                 .build();
     }

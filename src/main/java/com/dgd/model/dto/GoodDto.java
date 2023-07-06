@@ -89,6 +89,7 @@ public class GoodDto {
         private List<String> featuredImage;
         private LocalDateTime updatedAt;
         private String location;
+        private Status status;
         private Integer sharingApplicationNum;
     }
 

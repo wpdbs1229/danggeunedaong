@@ -46,7 +46,8 @@ public class SharingApplicationController {
 
     @GetMapping("/list")
     public ResponseEntity<?> searchMyApplyList(@RequestParam @Valid String userId) {
-        return ResponseEntity.ok(sharingApplicationService.searchMyapplyList(userId));
+        var result = sharingApplicationService.searchMyapplyList(userId);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/find")
