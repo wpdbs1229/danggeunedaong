@@ -35,7 +35,7 @@ public class GoodOfferController {
      */
     @PostMapping("/info")
     public ResponseEntity<?> saveGood(@Valid @RequestPart(value = "request") GoodDto.Request request,
-                                      @RequestPart(value = "files") List<MultipartFile> multipartFiles){
+                                      @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles){
         goodOfferService.saveGood(request, multipartFiles);
         return  ResponseEntity.ok("등록이 완료되었습니다.");
     }
@@ -58,7 +58,7 @@ public class GoodOfferController {
      */
     @PutMapping("/info")
     public ResponseEntity<?> updateGood(@Valid @RequestPart(value = "request") GoodDto.UpdateRequest request,
-                                        @RequestPart(value = "files") List<MultipartFile> multipartFiles){
+                                        @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles){
         goodOfferService.updateGoods(request,multipartFiles);
         return ResponseEntity.ok("수정이 완료되었습니다 :)");
     }

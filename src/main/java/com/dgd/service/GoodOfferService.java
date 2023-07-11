@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,9 +54,10 @@ public class GoodOfferService {
     public void saveGood(GoodDto.Request form, List<MultipartFile> multipartFiles){
         User user = userRepository.findByUserId(form.getUserId())
                 .orElseThrow( ()->new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_USER));
-
-
-        List<String> goodImages = s3Service.uploadGoodImage(multipartFiles);
+        List<String> goodImages = new ArrayList<>();
+        if (multipartFiles != null) {
+            goodImages = s3Service.uploadGoodImage(multipartFiles);
+        }
 
         GoodViewCount goodViewCount = goodViewCountRepository.save(GoodViewCount.builder().viewCount(0L).build());
         goodRepository.save(form.toEntity(user,goodViewCount, Status.SHARING, goodImages));
@@ -91,10 +94,23 @@ public class GoodOfferService {
         Good good = goodRepository.findById(form.getGoodId())
                 .orElseThrow(() -> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 
-        s3Service.deleteImage(good);
-        List<String> goodImages = s3Service.uploadGoodImage(multipartFiles);
-        good.update(form,goodImages);
+        List<String> goodImages = new ArrayList<>();
+        if (multipartFiles != null){
+            if (!form.getGoodImageList().isEmpty()){
+                List<String> deleteToImages = good.getGoodImageList().stream().filter(
+                        image -> form.getGoodImageList().stream().noneMatch(Predicate.isEqual(image))
+                ).collect(Collectors.toList());
 
+                goodImages.addAll(form.getGoodImageList());
+                s3Service.updateImage(deleteToImages);
+                goodImages.addAll(s3Service.uploadGoodImage(multipartFiles));
+            } else {
+                s3Service.deleteImage(good);
+                goodImages = s3Service.uploadGoodImage(multipartFiles);
+            }
+
+        }
+        good.update(form,goodImages);
         goodRepository.save(good);
     }
 
