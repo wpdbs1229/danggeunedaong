@@ -23,8 +23,10 @@ public class ChatRoomController {
     }
 
     @GetMapping("/enter")
-    public ResponseEntity<ChatRoom> enterChatRoom(@RequestBody @Valid EnterChatRoomDto enterChatRoomDto) {
-        return ResponseEntity.ok(chatRoomService.enterChatRoom(enterChatRoomDto));
+    public ResponseEntity<ChatRoom> enterChatRoom(@RequestParam Long roomId,
+                                                  @RequestParam String offerId,
+                                                  @RequestParam String takerId) {
+        return ResponseEntity.ok(chatRoomService.enterChatRoom(roomId,offerId,takerId));
     }
 
     @DeleteMapping("/leave")

@@ -86,7 +86,7 @@ public class KakaoOauthService {
                 UserSignInDto dto = UserSignInDto.builder()
 
                                                 .userId(String.valueOf(id))
-                                                .password(String.valueOf(id))
+                                                .password(passwordEncoder.encode(String.valueOf(id)))
                                                 .build();
 
                 br.close();
@@ -103,7 +103,7 @@ public class KakaoOauthService {
     public User saveUser(String id, String nickName, String picture) {
         User user = User.builder()
                 .userId(id)
-                .password(id)
+                .password(passwordEncoder.encode(id))
                 .socialId(nickName)
                 .profileUrl(picture)
                 .socialType(SocialType.KAKAO)
