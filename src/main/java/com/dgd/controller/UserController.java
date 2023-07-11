@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.security.Principal;
 
 
 @RestController
@@ -36,8 +37,10 @@ public class UserController {
 
     @PutMapping("/change")
     public void updateSocialUser (@RequestPart(value = "request") @Valid UpdateUserDto updateUserDto,
-                                  @RequestPart(required = false, value = "file") MultipartFile multipartFile) {
-        userService.updateUser(updateUserDto,multipartFile);
+                                  @RequestPart(required = false, value = "file") MultipartFile multipartFile,
+                                  Principal principal) {
+        String userId = principal.getName();
+        userService.updateUser(updateUserDto,multipartFile,userId);
     }
 
     /**

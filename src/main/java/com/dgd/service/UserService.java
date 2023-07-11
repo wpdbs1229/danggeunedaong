@@ -105,12 +105,12 @@ public class UserService {
     }
 
 
-    public User updateUser(UpdateUserDto updateUserDto, MultipartFile multipartFile) {
+    public User updateUser(UpdateUserDto updateUserDto, MultipartFile multipartFile, String userId) {
         Point point = pointService.getMapString(updateUserDto.getLocation());
         double latitude = point.getLatitude();
         double longitude = point.getLongitude();
 
-        User user = userRepository.findById(updateUserDto.getId())
+        User user = userRepository.findByUserId(userId)
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
 
 

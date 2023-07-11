@@ -86,7 +86,7 @@ public class KakaoOauthService {
                 UserSignInDto dto = UserSignInDto.builder()
 
                                                 .userId(String.valueOf(id))
-                                                .password(passwordEncoder.encode(String.valueOf(id)))
+                                                .password(String.valueOf(id))
                                                 .build();
 
                 br.close();
