@@ -45,11 +45,11 @@ public class GoodQueryRepository {
                 .fetch();
 
         Integer total = goodList.size();
-        Integer limit = pageable.getPageSize() * (pageable.getPageNumber()+1);
+        Integer limit = pageable.getPageSize();
 
         List<Good> content = new ArrayList<>();
-
-        for (int i = pageable.getPageNumber(); i < limit && i <total; i++){
+        System.out.println(pageable.getPageNumber() +"," + limit);
+        for (int i =(pageable.getPageNumber()  - 1)* limit; i < pageable.getPageNumber() * limit; i++){
             content.add(goodList.get(i));
         }
         return new PageImpl<>(content, pageable, total);

@@ -100,6 +100,16 @@ public class S3Service {
 
     }
 
-
+    public void updateImage(List<String> deleteToImages) {
+        for(String goodImage : deleteToImages){
+            String keyName = goodImage.substring(58);
+            boolean isObjectExist = amazonS3Client.doesObjectExist(bucketName, keyName);
+            if (isObjectExist){
+                amazonS3Client.deleteObject(bucketName,keyName);
+            } else{
+                throw new ApplicationException(NOT_EXIST_IMAGE);
+            }
+        }
+    }
 
 }
