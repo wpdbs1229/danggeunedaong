@@ -57,30 +57,13 @@ public class NaverOauthService {
             JsonElement element = parser.parse(bufferResponse.toString());
 
             JsonElement responseVal = element.getAsJsonObject().get("response");
-            String userId = responseVal.getAsJsonObject().get("id").getAsString();
+            String name = responseVal.getAsJsonObject().get("name").getAsString();
             String email = responseVal.getAsJsonObject().get("email").getAsString();
             String profileUrl = responseVal.getAsJsonObject().get("profile_image").getAsString();
-            /**
-             * TODO
-             * 프로필URL 추가
-             */
 
-            if (userRepository.findBySocialTypeAndSocialId(SocialType.NAVER, userId).isEmpty()) {
-                User user = saveUser(String.valueOf(userId), email, profileUrl);
-                UserSignInDto userSignInDto = UserSignInDto.builder()
-                                                            .userId(userId)
-                                                            .password(user.getPassword())
-                                                            .build();
-
-                String accessToken = userService.signIn(userSignInDto, response);
-
-
-                br.close();
-
-                return user.getRoleKey() + accessToken;
-            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.NAVER, email).isPresent()){
+            if (userRepository.findBySocialId(name).isPresent()){
                 UserSignInDto dto = UserSignInDto.builder()
-                        .userId(String.valueOf(email))
+                        .userId(email)
                         .password(email)
                         .build();
 
@@ -89,17 +72,33 @@ public class NaverOauthService {
                 return userService.signIn(dto, response);
             }
 
+            if (userRepository.findBySocialId(name).isEmpty()) {
+                User user = saveUser(name, email, profileUrl);
+
+                UserSignInDto userSignInDto = UserSignInDto.builder()
+                                                            .userId(email)
+                                                            .password(email)
+                                                            .build();
+
+                String accessToken = userService.signIn(userSignInDto, response);
+
+
+                br.close();
+
+                return accessToken;
+            }
         } catch (Exception e) {
             System.out.println(e);
+            throw new RuntimeException(e);
         }
         return null;
     }
 
-    public User saveUser(String userId, String email, String profileUrl) {
+    public User saveUser(String name, String email, String profileUrl) {
         User user = User.builder()
                 .userId(email)
                 .password(passwordEncoder.encode(email))
-                .socialId(userId)
+                .socialId(name)
                 .profileUrl(profileUrl)
                 .socialType(SocialType.NAVER)
                 .role(Role.GUEST)

@@ -68,23 +68,22 @@ public class KakaoOauthService {
                 picture = element.getAsJsonObject().get("properties").getAsJsonObject().get("profile_image").getAsString();
             }
 
-            if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isEmpty()) {
+            if (userRepository.findBySocialId(nickName).isEmpty()) {
                 User user = saveUser(String.valueOf(id), nickName, picture);
 
                 UserSignInDto userSignInDto = UserSignInDto.builder()
                         .userId(String.valueOf(id))
-                        .password(user.getPassword())
+                        .password(String.valueOf(id))
                         .build();
 
                 String accessToken = userService.signIn(userSignInDto, response);
 
                 br.close();
 
-                return user.getRoleKey() + accessToken;
+                return accessToken;
 
-            } else if (userRepository.findBySocialTypeAndSocialId(SocialType.KAKAO, nickName).isPresent()) {
+            } else if (userRepository.findBySocialId(nickName).isPresent()) {
                 UserSignInDto dto = UserSignInDto.builder()
-
                                                 .userId(String.valueOf(id))
                                                 .password(String.valueOf(id))
                                                 .build();

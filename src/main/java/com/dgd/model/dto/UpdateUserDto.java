@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateUserDto {
-//    private long id; // 수정하려는 유저 고유 long id;
     private String location; // 지도값 생성해서 넣는 dto
     private String nickName;
 }

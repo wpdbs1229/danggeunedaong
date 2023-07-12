@@ -22,6 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String userId;
     private String nickName;
     @NotBlank
@@ -36,6 +37,7 @@ public class User {
     private Role role;
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // KAKAO, NAVER
+    @Column(unique = true)
     private String socialId; // 소셜 아이디 ( 기본 로그인은 null )
     public void authorizeUser() { // 유저 권한 설정
         this.role = Role.USER;

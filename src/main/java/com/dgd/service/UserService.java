@@ -22,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import static com.dgd.exception.message.AuthErrorMessage.*;
@@ -114,11 +112,10 @@ public class UserService {
                .orElseThrow(() -> new AuthenticationException(USER_NOT_FOUND));
 
 
-
-
         if (userRepository.findByNickName(updateUserDto.getNickName()).isPresent()) {
             throw new AuthenticationException(DUPLICATED_NICKNAME);
         }
+
         String userImage = "";
         if (multipartFile != null) {
             if (!DEFAULT.equals(user.getProfileUrl())) {
@@ -126,6 +123,7 @@ public class UserService {
             }
             userImage = s3Service.uploadUserImage(multipartFile);
         }
+
 
         user.setLatAndLon(latitude, longitude);
         user.update(updateUserDto,userImage);

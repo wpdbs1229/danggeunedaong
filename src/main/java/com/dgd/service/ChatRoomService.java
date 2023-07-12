@@ -37,16 +37,15 @@ public class ChatRoomService {
 
         return chatRoomRepository.save(chatRoom);
     }
-    public ChatRoom enterChatRoom(Long roomId, String offerId, String takerId) throws ChatException {
+
+        public void enterChatRoom(Long roomId, String offerId, String takerId) throws ChatException {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new ChatException(NOT_ACTIVATED_APPLICATION));
-        if(offerId !=chatRoom.getOfferId() ||
-                takerId != chatRoom.getTakerId()) {
+        if(!offerId.equals(chatRoom.getOfferId()) || !takerId.equals(chatRoom.getTakerId())) {
             throw new AuthenticationException(UNAUTHORIZED_REQUEST);
         }
 
         chatRoom.roomOpen();
-        return chatRoom;
     }
 
     public void deleteRoom(Long roomId) {

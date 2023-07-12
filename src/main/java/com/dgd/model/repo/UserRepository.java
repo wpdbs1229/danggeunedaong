@@ -14,9 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(String userId);
     Optional<User> findByNickName(String nickName);
     Optional<User> findBySocialId(String socialId);
-    Optional<User> findBySocialTypeAndSocialId (SocialType socialType, String socialId);
-
-    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.nickName = :nickName")
-    boolean existByNickName(String nickName);
 
 }

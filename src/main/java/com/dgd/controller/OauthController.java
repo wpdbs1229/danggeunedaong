@@ -27,6 +27,5 @@ public class OauthController {
 
 
         return naverOauthService.createNaverUser(accessToken, response);
-
     }
 }
