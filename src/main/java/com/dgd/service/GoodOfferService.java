@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class GoodOfferService {
      * @param goodId
      * @return
      */
-    public GoodDto.Response readPerOneGood(Long goodId){
+    public GoodDto.Response readGoodInfo(Long goodId){
         Good good = goodRepository.findById(goodId)
                 .orElseThrow(()-> new ApplicationException(ApplicationErrorCode.NOT_REGISTERED_GOOD));
 

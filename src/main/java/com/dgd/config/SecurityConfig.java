@@ -43,9 +43,22 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
-                .antMatchers("/user/**", "/oauth/**", "/pet/**").permitAll()
-                .antMatchers("/websocket/**", "/chat/**", "/good/**","/sharing").permitAll()
+                .antMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs/**"
+                ).permitAll()
+                .antMatchers(
+                        "/user/**",
+                        "/oauth/**",
+                        "/pet/**")
+                .permitAll()
+                .antMatchers(
+                        "/websocket/**",
+                        "/chat/**",
+                        "/good/**",
+                        "/sharing")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

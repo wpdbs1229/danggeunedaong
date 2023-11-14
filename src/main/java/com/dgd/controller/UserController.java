@@ -25,9 +25,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody @Valid UserSignUpDto dto) {
-
-        return ResponseEntity.ok(userService.signUp(dto));
+    public ResponseEntity<User> signUp(@RequestBody @Valid UserSignUpDto form) {
+        var result = userService.signUp(form);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/signin")

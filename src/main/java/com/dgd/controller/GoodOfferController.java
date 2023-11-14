@@ -18,13 +18,13 @@ public class GoodOfferController {
     private final GoodOfferService goodOfferService;
 
     /**
-     * 상품 상세 정보 조회 (offer)
+     *
      * @param goodId
      * @return
      */
-    @GetMapping("/info")
-    public ResponseEntity<?> readPerOneGood(@Valid @RequestParam Long goodId) {
-        var result = goodOfferService.readPerOneGood(goodId);
+    @GetMapping("/info/{goodid}")
+    public ResponseEntity<?> readGoodInfo(@PathVariable(name = "goodid") Long goodId) {
+        var result = goodOfferService.readGoodInfo(goodId);
         return ResponseEntity.ok(result);
     }
 

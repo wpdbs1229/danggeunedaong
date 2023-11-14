@@ -29,33 +29,56 @@ repositories {
 }
 
 dependencies {
-  	implementation 'com.google.code.gson:gson:2.9.0'
-  	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+  	//json paser
+	implementation 'com.google.code.gson:gson:2.9.0'
+
+	//web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// ws
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	//유효성 검즘
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.5.6'
+
+	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'redis.clients:jedis:3.7.0'
+
+	//swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	//view
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-
+	//lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//mapper
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+	//test
 	implementation 'org.mockito:mockito-core:3.9.0'
 	implementation 'org.mockito:mockito-junit-jupiter:3.9.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+	// DB & ORM
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	//QueryDsl
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
-
-	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
@@ -72,9 +95,11 @@ querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
+
 sourceSets {
 	main.java.srcDir querydslDir
 }
+
 compileQuerydsl{
 	options.annotationProcessorPath = configurations.querydsl
 }

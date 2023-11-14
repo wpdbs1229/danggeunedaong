@@ -80,6 +80,7 @@ public class GoodDto {
         private LocalDateTime updatedAt;
     }
 
+
     @Getter
     @Builder
     @AllArgsConstructor
@@ -93,6 +94,7 @@ public class GoodDto {
         private Status status;
         private Integer sharingApplicationNum;
     }
+
 
     @Getter
     @Builder
@@ -110,6 +112,7 @@ public class GoodDto {
         private SubCategory subCategory;
     }
 
+
     @Getter
     @Builder
     @AllArgsConstructor
@@ -118,4 +121,6 @@ public class GoodDto {
         private List<ResponseList> responseLists;
         private int totalPageNum;
     }
+
+
 }
